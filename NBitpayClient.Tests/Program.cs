@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using NBitcoin.RPC;
 using NBitcoin.Payment;
+using Newtonsoft.Json;
 
 namespace NBitpayClient.Tests
 {
@@ -37,6 +38,7 @@ namespace NBitpayClient.Tests
 			CustomServer server = null;
 			try
 			{
+				new Program().TestContextFree();
 				RPC = new RPCClient(RPCAuth, "http://localhost:" + Network.RPCPort, Network);
 				RPC.GetBalance();
 				Logs.Tests.LogInformation("Can connect to RPC");
@@ -45,6 +47,7 @@ namespace NBitpayClient.Tests
 				Logs.Tests.LogInformation("Callback url used is " + CallbackUri);
 				Server = new CustomServer("http://0.0.0.0:" + serverPort + "/", cookie);
 				new Program().Run();
+				//Console.ReadLine();
 				Logs.Tests.LogInformation("Tests ran successfully");
 			}
 			catch(AssertException ex)
@@ -61,6 +64,18 @@ namespace NBitpayClient.Tests
 					Server.Dispose();
 			}
 			Console.ReadLine();
+		}
+
+		private void TestContextFree()
+		{
+			CanSerializeDeserialize();
+		}
+
+		private void CanSerializeDeserialize()
+		{
+			var str = "{\"id\":\"NzzNUB5DEMLP5q95szL1VS\",\"url\":\"https://test.bitpay.com/invoice?id=NzzNUB5DEMLP5q95szL1VS\",\"posData\":\"posData\",\"status\":\"paid\",\"btcPrice\":\"0.001246\",\"price\":5,\"currency\":\"USD\",\"invoiceTime\":1503140597709,\"expirationTime\":1503141497709,\"currentTime\":1503140607752,\"btcPaid\":\"0.001246\",\"btcDue\":\"0.000000\",\"rate\":4012.12,\"exceptionStatus\":false,\"buyerFields\":{}}";
+			var notif = JsonConvert.DeserializeObject<InvoicePaymentNotification>(str);
+			var serialized = JsonConvert.SerializeObject(notif);
 		}
 
 		private static IPAddress GetExternalIp()
@@ -88,8 +103,9 @@ namespace NBitpayClient.Tests
 				PosData = "posData",
 				OrderId = "orderId",
 				//RedirectURL = redirect + "redirect",
-				NotificationURL = CallbackUri + "notification",
-				ItemDesc = "Some description Monethic(s)"
+				NotificationURL = CallbackUri + "/notification",
+				ItemDesc = "Some description",
+				FullNotifications = true
 			});
 			Logs.Tests.LogInformation("Invoice created");
 			BitcoinUrlBuilder url = new BitcoinUrlBuilder(invoice.PaymentUrls.BIP21);
@@ -97,7 +113,11 @@ namespace NBitpayClient.Tests
 			Logs.Tests.LogInformation("Invoice paid");
 			Server.ProcessNextRequest((ctx) =>
 			{
+				var ipn = new StreamReader(ctx.Request.Body).ReadToEnd();
+				JsonConvert.DeserializeObject<InvoicePaymentNotification>(ipn); //can deserialize
 			});
+			var invoice2 = Bitpay.GetInvoice(invoice.Id, Facade.Merchant);
+			Assert.NotNull(invoice2);
 		}
 
 		private void CanGetRate()
@@ -126,7 +146,7 @@ namespace NBitpayClient.Tests
 				{
 
 					Bitpay = new Bitpay(k.PrivateKey, BitPayUri);
-					if(Bitpay.TestAccess(Facade.PointOfSale))
+					if(Bitpay.TestAccess(Facade.Merchant))
 						return;
 				}
 				catch { }
@@ -136,7 +156,7 @@ namespace NBitpayClient.Tests
 			File.WriteAllText(keyFile, k.ToString());
 
 			Bitpay = new Bitpay(k.PrivateKey, BitPayUri);
-			var pairing = Bitpay.RequestClientAuthorization(Facade.PointOfSale);
+			var pairing = Bitpay.RequestClientAuthorization(Facade.Merchant);
 
 
 			throw new AssertException("You need to approve the test key to access bitpay by going to this link " + pairing.CreateLink(Bitpay.BaseUrl).AbsoluteUri);

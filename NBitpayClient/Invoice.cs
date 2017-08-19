@@ -2,6 +2,8 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using NBitcoin;
+using NBitpayClient.JsonConverters;
 
 namespace NBitpayClient
 {
@@ -158,7 +160,8 @@ namespace NBitpayClient
         }
         public bool ShouldSerializeStatus() { return false; }
 
-        public double BtcPrice { get; set; }
+		[JsonConverter(typeof(MoneyJsonConverter))]
+		public Money BtcPrice { get; set; }
         public bool ShouldSerializeBtcPrice() { return false; }
 
         [JsonConverter(typeof(DateTimeJsonConverter))]
@@ -173,10 +176,12 @@ namespace NBitpayClient
         public DateTimeOffset CurrentTime { get; set; }
         public bool ShouldSerializeCurrentTime() { return false; }
 
-        public double BtcPaid { get; set; }
+		[JsonConverter(typeof(MoneyJsonConverter))]
+        public Money BtcPaid { get; set; }
         public bool ShouldSerializeBtcPaid() { return false; }
 
-        public double BtcDue { get; set; }
+		[JsonConverter(typeof(MoneyJsonConverter))]
+		public Money BtcDue { get; set; }
         public bool ShouldSerializeBtcDue() { return false; }
 
         public List<InvoiceTransaction> Transactions { get; set; }

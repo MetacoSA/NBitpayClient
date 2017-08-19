@@ -21,11 +21,11 @@ namespace NBitpayClient.Tests
 			_Host = new WebHostBuilder()
 				.Configure(app =>
 				{
-					app.Run(async req =>
+					app.Run(req =>
 					{
 						if(req.Request.Path.Value.Contains(cookie.ToString()))
 						{
-							while(_Act != null)
+							while(_Act == null)
 							{
 								Thread.Sleep(10);
 								_Closed.Token.ThrowIfCancellationRequested();
@@ -35,6 +35,7 @@ namespace NBitpayClient.Tests
 							_Evt.TrySetResult(true);
 						}
 						req.Response.StatusCode = 200;
+						return Task.CompletedTask;
 					});
 				})
 				.UseKestrel()

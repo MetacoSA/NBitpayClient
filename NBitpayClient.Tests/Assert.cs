@@ -19,6 +19,12 @@ namespace NBitpayClient.Tests
 				throw new AssertException("Should not be null");
 		}
 
+		internal static void Equal<T>(T a, T b) where T : class
+		{
+			if(a != b)
+				throw new AssertException("Should be equals");
+		}
+
 		internal static void True(bool v)
 		{
 			if(!v)
