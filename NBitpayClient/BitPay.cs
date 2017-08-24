@@ -15,6 +15,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using NBitpayClient.Extensions;
 
 
 namespace NBitpayClient
@@ -85,7 +86,7 @@ namespace NBitpayClient
 			{
 				if(key == null)
 					throw new ArgumentNullException(nameof(key));
-				SIN = Encoders.Base58Check.EncodeData(Encoders.Hex.DecodeData("0f02" + key.PubKey.Hash.ToString()));
+				SIN = key.PubKey.GetBitIDSIN();
 				Key = key;
 			}
 
@@ -103,12 +104,10 @@ namespace NBitpayClient
 
 			internal void Sign(HttpRequestMessage message)
 			{
-				var input = message.RequestUri.AbsoluteUri;
-				if(message.Content != null)
-					input += message.Content.ReadAsStringAsync().GetAwaiter().GetResult(); //no await is ok, no network access
-				var hash = Hashes.SHA256(Encoding.UTF8.GetBytes(input));
-				var signature = Encoders.Hex.EncodeData(Key.Sign(new uint256(hash)).ToDER());
-				message.Headers.Add("x-signature", signature);
+				var uri = message.RequestUri.AbsoluteUri;
+				var body = message.Content?.ReadAsStringAsync()?.GetAwaiter().GetResult(); //no await is ok, no network access
+				
+				message.Headers.Add("x-signature", Key.GetBitIDSignature(uri, body));
 				message.Headers.Add("x-identity", Key.PubKey.ToHex());
 
 			}
@@ -132,11 +131,21 @@ namespace NBitpayClient
 		}
 
 
+
+
 		private const String BITPAY_API_VERSION = "2.0.0";
 
 		private Uri _baseUrl = null;
 		AuthInformation _Auth;
 		static HttpClient _Client = new HttpClient();
+
+		public string SIN
+		{
+			get
+			{
+				return _Auth.SIN;
+			}
+		}
 
 		public Uri BaseUrl
 		{

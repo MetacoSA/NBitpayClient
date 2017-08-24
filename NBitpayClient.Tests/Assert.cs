@@ -30,5 +30,11 @@ namespace NBitpayClient.Tests
 			if(!v)
 				throw new AssertException("Should be true");
 		}
+
+		internal static void False(bool v)
+		{
+			if(v)
+				throw new AssertException("Should be false");
+		}
 	}
 }

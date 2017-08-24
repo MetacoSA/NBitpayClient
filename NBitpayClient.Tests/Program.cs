@@ -9,6 +9,7 @@ using System.Net.Http;
 using NBitcoin.RPC;
 using NBitcoin.Payment;
 using Newtonsoft.Json;
+using NBitpayClient.Extensions;
 
 namespace NBitpayClient.Tests
 {
@@ -68,7 +69,26 @@ namespace NBitpayClient.Tests
 
 		private void TestContextFree()
 		{
+			CanSignAndCheckSig();
 			CanSerializeDeserialize();
+		}
+
+		private void CanSignAndCheckSig()
+		{
+			var key = new Key();
+			string uri = "http://toto:9393/";
+			string content = "blah";
+			var sig = key.GetBitIDSignature(uri, content);
+			Assert.NotNull(sig);
+			Assert.True(key.PubKey.CheckBitIDSignature(sig, uri, content));
+			Assert.False(key.PubKey.CheckBitIDSignature(sig, uri + "1", content));
+			Assert.False(key.PubKey.CheckBitIDSignature(sig, uri, content + "1"));
+
+			content = null;
+			sig = key.GetBitIDSignature(uri, content);
+			Assert.True(key.PubKey.CheckBitIDSignature(sig, uri, content));
+			Assert.True(key.PubKey.CheckBitIDSignature(sig, uri, string.Empty));
+			Assert.False(key.PubKey.CheckBitIDSignature(sig, uri, "1"));
 		}
 
 		private void CanSerializeDeserialize()
