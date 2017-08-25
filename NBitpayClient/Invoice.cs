@@ -197,9 +197,18 @@ namespace NBitpayClient
         public bool ShouldSerializeExceptionStatus() { return false; }
 
         public InvoicePaymentUrls PaymentUrls { get; set; }
-        public bool ShouldSerializePaymentUrls() { return false; }
+		public bool ShouldSerializePaymentUrls() { return false; }
 
-        public bool Refundable
+		public string BitcoinAddress
+		{
+			get; set;
+		}
+		public bool ShouldBitcoinAddress()
+		{
+			return false;
+		}
+
+		public bool Refundable
         {
             get { return this.Flags != null && this.Flags.Refundable; }
         }
@@ -208,7 +217,8 @@ namespace NBitpayClient
         [Newtonsoft.Json.JsonProperty]
         private Flags Flags { get; set; }
         public bool ShouldSerializeFlags() { return false; }
-    }
+
+	}
 
     class Flags
     {
