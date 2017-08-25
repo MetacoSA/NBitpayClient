@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,5 +18,8 @@ namespace NBitpayClient
         public string BIP72 { get; set; }
         public string BIP72b { get; set; }
         public string BIP73 { get; set; }
-    }
+
+		[JsonProperty("bitcoinAddress")]
+		public string BitcoinAddress { get; set; }
+	}
 }
