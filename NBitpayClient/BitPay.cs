@@ -69,7 +69,7 @@ namespace NBitpayClient
 
 	public class Bitpay
 	{
-		class AccessToken
+		public class AccessToken
 		{
 			public string Key
 			{
@@ -184,7 +184,7 @@ namespace NBitpayClient
 			token.Label = "DEFAULT";
 			String json = JsonConvert.SerializeObject(token);
 			HttpResponseMessage response = await this.PostAsync("tokens", json).ConfigureAwait(false);
-			var tokens = this.ParseResponse<List<Token>>(response);
+			var tokens = await this.ParseResponse<List<Token>>(response).ConfigureAwait(false);
 			foreach(Token t in tokens)
 			{
 				_Auth.SaveToken(t.Facade, t.Value);
@@ -216,7 +216,7 @@ namespace NBitpayClient
 			token.Label = "DEFAULT";
 			String json = JsonConvert.SerializeObject(token);
 			HttpResponseMessage response = await this.PostAsync("tokens", json).ConfigureAwait(false);
-			var tokens = this.ParseResponse<List<Token>>(response);
+			var tokens = await this.ParseResponse<List<Token>>(response).ConfigureAwait(false);
 			// Expecting a single token resource.
 			if(tokens.Count != 1)
 			{
@@ -250,7 +250,7 @@ namespace NBitpayClient
 			invoice.Guid = Guid.NewGuid().ToString();
 			String json = JsonConvert.SerializeObject(invoice);
 			HttpResponseMessage response = await this.PostAsync("invoices", json, true).ConfigureAwait(false);
-			invoice = this.ParseResponse<Invoice>(response);
+			invoice = await this.ParseResponse<Invoice>(response).ConfigureAwait(false);
 			// Track the token for this invoice
 			_Auth.SaveToken(invoice.Id, invoice.Token);
 			return invoice;
@@ -289,7 +289,7 @@ namespace NBitpayClient
 			{
 				response = await this.GetAsync($"invoices/" + invoiceId, true).ConfigureAwait(false);
 			}
-			return this.ParseResponse<Invoice>(response);
+			return await this.ParseResponse<Invoice>(response).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -320,7 +320,7 @@ namespace NBitpayClient
 			if(dateEnd != null)
 				parameters.Add("dateEnd", dateEnd.Value.ToString("d", CultureInfo.InvariantCulture));
 			HttpResponseMessage response = await this.GetAsync($"invoices" + BuildQuery(parameters), true).ConfigureAwait(false);
-			return this.ParseResponse<Invoice[]>(response);
+			return await this.ParseResponse<Invoice[]>(response).ConfigureAwait(false);
 		}
 
 		private string BuildQuery(Dictionary<string, string> parameters)
@@ -349,7 +349,7 @@ namespace NBitpayClient
 		public async Task<Rates> GetRatesAsync()
 		{
 			HttpResponseMessage response = await this.GetAsync("rates", false).ConfigureAwait(false);
-			var rates = this.ParseResponse<List<Rate>>(response);
+			var rates = await this.ParseResponse<List<Rate>>(response).ConfigureAwait(false);
 			return new Rates(rates);
 		}
 
@@ -384,7 +384,7 @@ namespace NBitpayClient
 				parameters.Add("dateEnd", dateEnd.Value.ToString("d", CultureInfo.InvariantCulture));
 
 			HttpResponseMessage response = await this.GetAsync($"ledgers/{currency}" + BuildQuery(parameters), true).ConfigureAwait(false);
-			var entries = this.ParseResponse<List<LedgerEntry>>(response);
+			var entries = await this.ParseResponse<List<LedgerEntry>>(response).ConfigureAwait(false);
 			return new Ledger(entries);
 		}
 
@@ -409,7 +409,7 @@ namespace NBitpayClient
 			}
 		}
 
-		private async Task<AccessToken[]> GetAccessTokensAsync()
+		public async Task<AccessToken[]> GetAccessTokensAsync()
 		{
 			HttpResponseMessage response = await this.GetAsync("tokens", true).ConfigureAwait(false);
 			response.EnsureSuccessStatusCode();
@@ -447,7 +447,7 @@ namespace NBitpayClient
 			return token != null;
 		}
 
-		private async Task<AccessToken> GetAccessTokenAsync(Facade facade)
+		public async Task<AccessToken> GetAccessTokenAsync(Facade facade)
 		{
 			var auth = _Auth;
 			var token = auth.GetAccessToken(facade);
@@ -510,7 +510,7 @@ namespace NBitpayClient
 			return uri;
 		}
 
-		private T ParseResponse<T>(HttpResponseMessage response)
+		private async Task<T> ParseResponse<T>(HttpResponseMessage response)
 		{
 			if(response == null)
 			{
@@ -520,22 +520,24 @@ namespace NBitpayClient
 			// Get the response as a dynamic object for detecting possible error(s) or data object.
 			// An error(s) object raises an exception.
 			// A data object has its content extracted (throw away the data wrapper object).
-			String responseString = response.Content.ReadAsStringAsync().Result;
+			String responseString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 			var obj = JObject.Parse(responseString);
 
 			// Check for error response.
 			if(obj.Property("error") != null)
 			{
-				throw new BitPayException("Error: " + obj.Property("error").Value.ToString());
+				var ex = new BitPayException();
+				ex.AddError(obj.Property("error").Value.ToString());
+				throw ex;
 			}
 			if(obj.Property("errors") != null)
 			{
-				String message = "Multiple errors:";
+				var ex = new BitPayException();
 				foreach(var errorItem in ((JArray)obj.Property("errors").Value).OfType<JObject>())
 				{
-					message += "\n" + errorItem.Property("error").Value.ToString() + " " + errorItem.Property("param").Value.ToString();
+					ex.AddError(errorItem.Property("error").Value.ToString() + " " + errorItem.Property("param").Value.ToString());
 				}
-				throw new BitPayException(message);
+				throw ex;
 			}
 
 			T data = default(T);
