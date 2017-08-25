@@ -10,6 +10,7 @@ using NBitcoin.RPC;
 using NBitcoin.Payment;
 using Newtonsoft.Json;
 using NBitpayClient.Extensions;
+using NBitcoin.DataEncoders;
 
 namespace NBitpayClient.Tests
 {
@@ -137,7 +138,7 @@ namespace NBitpayClient.Tests
 			//	var ipn = new StreamReader(ctx.Request.Body).ReadToEnd();
 			//	JsonConvert.DeserializeObject<InvoicePaymentNotification>(ipn); //can deserialize
 			//});
-			var invoice2 = Bitpay.GetInvoice(invoice.Id, Facade.PointOfSale);
+			var invoice2 = Bitpay.GetInvoice(invoice.Id, Facade.Merchant);
 			Assert.NotNull(invoice2);
 		}
 

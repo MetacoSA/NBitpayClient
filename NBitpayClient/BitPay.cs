@@ -252,7 +252,7 @@ namespace NBitpayClient
 			HttpResponseMessage response = await this.PostAsync("invoices", json, true).ConfigureAwait(false);
 			invoice = await this.ParseResponse<Invoice>(response).ConfigureAwait(false);
 			// Track the token for this invoice
-			_Auth.SaveToken(invoice.Id, invoice.Token);
+			//_Auth.SaveToken(invoice.Id, invoice.Token);
 			return invoice;
 		}
 
@@ -282,7 +282,7 @@ namespace NBitpayClient
 			HttpResponseMessage response = null;
 			if(facade == Facade.Merchant)
 			{
-				var token = (await GetAccessTokenAsync(Facade.Merchant).ConfigureAwait(false)).Value;
+				var token = (await GetAccessTokenAsync(facade).ConfigureAwait(false)).Value;
 				response = await this.GetAsync($"invoices/{invoiceId}?token={token}", true).ConfigureAwait(false);
 			}
 			else
