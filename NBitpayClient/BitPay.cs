@@ -194,26 +194,28 @@ namespace NBitpayClient
 		/// <summary>
 		/// Request authorization (a token) for this client in the specified facade.
 		/// </summary>
+		/// <param name="label">The label of this token.</param>
 		/// <param name="facade">The facade for which authorization is requested.</param>
 		/// <returns>A pairing code for this client.  This code must be used to authorize this client at BitPay.com/api-tokens.</returns>
-		public PairingCode RequestClientAuthorization(Facade facade)
+		public PairingCode RequestClientAuthorization(string label, Facade facade)
 		{
-			return RequestClientAuthorizationAsync(facade).GetAwaiter().GetResult();
+			return RequestClientAuthorizationAsync(label, facade).GetAwaiter().GetResult();
 		}
 
 		/// <summary>
 		/// Request authorization (a token) for this client in the specified facade.
 		/// </summary>
+		/// <param name="label">The label of this token.</param>
 		/// <param name="facade">The facade for which authorization is requested.</param>
 		/// <returns>A pairing code for this client.  This code must be used to authorize this client at BitPay.com/api-tokens.</returns>
-		public async Task<PairingCode> RequestClientAuthorizationAsync(Facade facade)
+		public async Task<PairingCode> RequestClientAuthorizationAsync(string label, Facade facade)
 		{
 			Token token = new Token();
 			token.Id = _Auth.SIN;
 			token.Guid = Guid.NewGuid().ToString();
 			token.Facade = facade.ToString();
 			token.Count = 1;
-			token.Label = "DEFAULT";
+			token.Label = label ?? "DEFAULT";
 			String json = JsonConvert.SerializeObject(token);
 			HttpResponseMessage response = await this.PostAsync("tokens", json).ConfigureAwait(false);
 			var tokens = await this.ParseResponse<List<Token>>(response).ConfigureAwait(false);

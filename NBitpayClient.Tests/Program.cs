@@ -132,13 +132,12 @@ namespace NBitpayClient.Tests
 			BitcoinUrlBuilder url = new BitcoinUrlBuilder(invoice.PaymentUrls.BIP21);
 			RPC.SendToAddress(url.Address, url.Amount);
 			Logs.Tests.LogInformation("Invoice paid");
-			var t = Bitpay.GetAccessTokensAsync().Result;
 			//Server.ProcessNextRequest((ctx) =>
 			//{
 			//	var ipn = new StreamReader(ctx.Request.Body).ReadToEnd();
 			//	JsonConvert.DeserializeObject<InvoicePaymentNotification>(ipn); //can deserialize
 			//});
-			var invoice2 = Bitpay.GetInvoice(invoice.Id, Facade.Merchant);
+			var invoice2 = Bitpay.GetInvoice(invoice.Id);
 			Assert.NotNull(invoice2);
 		}
 
@@ -178,7 +177,7 @@ namespace NBitpayClient.Tests
 			File.WriteAllText(keyFile, k.ToString());
 
 			Bitpay = new Bitpay(k.PrivateKey, BitPayUri);
-			var pairing = Bitpay.RequestClientAuthorization(Facade.Merchant);
+			var pairing = Bitpay.RequestClientAuthorization("test", Facade.Merchant);
 
 
 			throw new AssertException("You need to approve the test key to access bitpay by going to this link " + pairing.CreateLink(Bitpay.BaseUrl).AbsoluteUri);
