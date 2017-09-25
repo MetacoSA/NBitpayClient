@@ -102,7 +102,7 @@ namespace NBitpayClient
 		}
 
 		[JsonProperty(PropertyName = "exceptionStatus")]
-		public bool ExceptionStatus
+		public JToken ExceptionStatus
 		{
 			get; set;
 		}

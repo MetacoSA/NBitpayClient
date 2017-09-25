@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using NBitcoin;
 using NBitpayClient.JsonConverters;
+using Newtonsoft.Json.Linq;
 
 namespace NBitpayClient
 {
@@ -193,7 +194,7 @@ namespace NBitpayClient
         public Dictionary<string, string> ExRates { get; set; }
         public bool ShouldSerializeExRates() { return false; }
 
-        public string ExceptionStatus { get; set; }
+        public JToken ExceptionStatus { get; set; }
         public bool ShouldSerializeExceptionStatus() { return false; }
 
         public InvoicePaymentUrls PaymentUrls { get; set; }
