@@ -36,6 +36,33 @@ namespace NBitpayClient
 			_Value = value;
 		}
 
+
+		public override bool Equals(object obj)
+		{
+			Facade item = obj as Facade;
+			if(item == null)
+				return false;
+			return _Value.Equals(item._Value);
+		}
+		public static bool operator ==(Facade a, Facade b)
+		{
+			if(System.Object.ReferenceEquals(a, b))
+				return true;
+			if(((object)a == null) || ((object)b == null))
+				return false;
+			return a._Value == b._Value;
+		}
+
+		public static bool operator !=(Facade a, Facade b)
+		{
+			return !(a == b);
+		}
+
+		public override int GetHashCode()
+		{
+			return _Value.GetHashCode();
+		}
+
 		public override string ToString()
 		{
 			return _Value;
@@ -113,9 +140,18 @@ namespace NBitpayClient
 			}
 
 			ConcurrentDictionary<string, AccessToken> _Tokens = new ConcurrentDictionary<string, AccessToken>();
-			public AccessToken GetAccessToken(Facade key)
+			public AccessToken GetAccessToken(Facade requirement)
 			{
-				return _Tokens.TryGet(key.ToString());
+				var token = _Tokens.TryGet(requirement.ToString());
+				if(requirement == Facade.User)
+				{
+					token = _Tokens.TryGet(Facade.PointOfSale.ToString()) ?? _Tokens.TryGet(Facade.Merchant.ToString());
+				}
+				if(requirement == Facade.PointOfSale)
+				{
+					token = _Tokens.TryGet(Facade.Merchant.ToString());
+				}
+				return token;
 			}
 
 			public void SaveTokens(AccessToken[] tokens)
@@ -277,7 +313,7 @@ namespace NBitpayClient
 		/// <returns>The invoice object retrieved from the server.</returns>
 		public async Task<Invoice> GetInvoiceAsync(String invoiceId, Facade facade = null)
 		{
-			facade = facade ?? Facade.PointOfSale;
+			facade = facade ?? Facade.Merchant;
 			// Provide the merchant token whenthe merchant facade is being used.
 			// GET/invoices expects the merchant token and not the merchant/invoice token.
 
