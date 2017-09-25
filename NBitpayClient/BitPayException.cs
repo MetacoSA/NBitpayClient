@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace NBitpayClient
 {
@@ -43,7 +44,7 @@ namespace NBitpayClient
 		{
 			get
 			{
-				return String.Join(Environment.NewLine, _Errors.ToArray());
+				return String.Join(Environment.NewLine, new[] { base.Message }.Concat(_Errors).ToArray());
 			}
 		}
 
