@@ -14,6 +14,16 @@ namespace NBitpayClient.Extensions
 			return Encoders.Base58Check.EncodeData(Encoders.Hex.DecodeData("0f02" + key.Hash.ToString()));
 		}
 
+		public static bool ValidateSIN(this string sin)
+		{
+			try
+			{
+				var decoded = Encoders.Base58Check.DecodeData(sin);
+				return decoded.Length == 2 + 20 && decoded[0] == 0x0f && decoded[1] == 0x02;
+			}
+			catch { return false; }
+		}
+
 		public static string GetBitIDSignature(this Key key, string uri, string body)
 		{
 			body = body ?? string.Empty;

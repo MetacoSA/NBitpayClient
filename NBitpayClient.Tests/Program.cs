@@ -80,6 +80,7 @@ namespace NBitpayClient.Tests
 			string uri = "http://toto:9393/";
 			string content = "blah";
 			var sig = key.GetBitIDSignature(uri, content);
+			Assert.True(key.PubKey.GetBitIDSIN().ValidateSIN());
 			Assert.NotNull(sig);
 			Assert.True(key.PubKey.CheckBitIDSignature(sig, uri, content));
 			Assert.False(key.PubKey.CheckBitIDSignature(sig, uri + "1", content));
