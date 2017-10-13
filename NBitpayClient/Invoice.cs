@@ -31,10 +31,14 @@ namespace NBitpayClient
             Currency = currency;
         }
 
-        // API fields
-        //
+		// API fields
+		//
 
-        [JsonProperty(PropertyName = "guid")]
+
+		[JsonProperty(PropertyName = "buyer")]
+		public Buyer Buyer { get; set;}
+
+		[JsonProperty(PropertyName = "guid")]
         public string Guid { get; set; }
 
         [JsonProperty(PropertyName = "nonce")]
