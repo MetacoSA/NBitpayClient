@@ -14,9 +14,13 @@ namespace NBitpayClient
 
         public InvoicePaymentUrls() {}
 
+		[JsonProperty("BIP21")]
         public string BIP21 { get; set; }
-        public string BIP72 { get; set; }
-        public string BIP72b { get; set; }
-        public string BIP73 { get; set; }
+		[JsonProperty("BIP72")]
+		public string BIP72 { get; set; }
+		[JsonProperty("BIP72b")]
+		public string BIP72b { get; set; }
+		[JsonProperty("BIP73")]
+		public string BIP73 { get; set; }
 	}
 }
