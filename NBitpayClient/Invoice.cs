@@ -61,10 +61,6 @@ namespace NBitpayClient
             get { return _currency; }
             set
             {
-                if (value.Length != 3)
-                {
-                    throw new BitPayException("Error: currency code must be exactly three characters");
-                }
                 _currency = value;
             }
         }
