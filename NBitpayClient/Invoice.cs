@@ -96,7 +96,17 @@ namespace NBitpayClient
         public bool FullNotifications { get; set; }
         public bool ShouldSerializeFullNotifications() { return FullNotifications; }
 
-        [JsonProperty(PropertyName = "notificationEmail")]
+		[JsonProperty(PropertyName = "extendedNotifications")]
+		public bool ExtendedNotifications
+		{
+			get; set;
+		}
+		public bool ShouldSerializextendedNotifications()
+		{
+			return ExtendedNotifications;
+		}
+
+		[JsonProperty(PropertyName = "notificationEmail")]
         public string NotificationEmail { get; set; }
         public bool ShouldSerializeNotificationEmail() { return !String.IsNullOrEmpty(NotificationEmail); }
 
