@@ -102,7 +102,7 @@ namespace NBitpayClient
 		/// Total amount of the invoice paid in this crypto
 		/// </summary>
 		[JsonProperty("cryptoPaid")]
-		public Money CryptoPaid
+		public string CryptoPaid
 		{
 			get; set;
 		}
