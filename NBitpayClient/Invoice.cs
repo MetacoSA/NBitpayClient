@@ -17,6 +17,12 @@ namespace NBitpayClient
 			get; set;
 		}
 
+		[JsonProperty("paymentType")]
+		public string PaymentType
+		{
+			get; set;
+		}
+
 		[JsonProperty("rate")]
 		public decimal Rate
 		{
