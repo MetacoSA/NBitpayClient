@@ -417,9 +417,9 @@ namespace NBitpayClient
 			Dictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters.Add("token", token.Value);
 			if(dateStart != null)
-				parameters.Add("dateStart", dateStart.Value.ToString("d", CultureInfo.InvariantCulture));
+				parameters.Add("startDate", dateStart.Value.ToString("d", CultureInfo.InvariantCulture));
 			if(dateEnd != null)
-				parameters.Add("dateEnd", dateEnd.Value.ToString("d", CultureInfo.InvariantCulture));
+				parameters.Add("endDate", dateEnd.Value.ToString("d", CultureInfo.InvariantCulture));
 
 			HttpResponseMessage response = await this.GetAsync($"ledgers/{currency}" + BuildQuery(parameters), true).ConfigureAwait(false);
 			var entries = await this.ParseResponse<List<LedgerEntry>>(response).ConfigureAwait(false);
