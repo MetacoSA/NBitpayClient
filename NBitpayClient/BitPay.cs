@@ -559,6 +559,13 @@ namespace NBitpayClient
 			// An error(s) object raises an exception.
 			// A data object has its content extracted (throw away the data wrapper object).
 			String responseString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			
+			if(responseString[0] == '[') {
+				// some endpoints return an array at the root (like /Ledgers/{currency}).
+				// without short circuiting here, the JObject.Parse will throw
+				return JsonConvert.DeserializeObject<T>(responseString);
+			}
+			
 			var obj = JObject.Parse(responseString);
 
 			// Check for error response.
