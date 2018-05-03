@@ -392,7 +392,32 @@ namespace NBitpayClient
 		}
 
 		/// <summary>
-		/// Retrieve a list of ledgers by date range using the merchant facade.
+		/// Retrieves the caller's ledgers for each currency with summary.
+		/// </summary>
+		/// <returns>A list of ledger objects retrieved from the server.</returns>
+		public List<Ledger> GetLedgers()
+		{
+			return GetLedgersAsync().GetAwaiter().GetResult();
+		}
+
+		/// <summary>
+		/// Retrieves the caller's ledgers for each currency with summary.
+		/// </summary>
+		/// <returns>A list of ledger objects retrieved from the server.</returns>
+		public async Task<List<Ledger>> GetLedgersAsync()
+		{
+			var token = await this.GetAccessTokenAsync(Facade.Merchant).ConfigureAwait(false);
+
+			Dictionary<string, string> parameters = new Dictionary<string, string>();
+			parameters.Add("token", token.Value);
+
+			HttpResponseMessage response = await this.GetAsync($"ledgers/" + BuildQuery(parameters), true).ConfigureAwait(false);
+			var ledgers = await this.ParseResponse<List<Ledger>>(response).ConfigureAwait(false);
+			return ledgers;
+		}
+
+		/// <summary>
+		/// Retrieve a list of ledger entries by date range using the merchant facade.
 		/// </summary>
 		/// <param name="currency">The three digit currency string for the ledger to retrieve.</param>
 		/// <param name="dateStart">The start date for the query.</param>
@@ -404,7 +429,7 @@ namespace NBitpayClient
 		}
 
 		/// <summary>
-		/// Retrieve a list of ledgers by date range using the merchant facade.
+		/// Retrieve a list of ledger entries by date range using the merchant facade.
 		/// </summary>
 		/// <param name="currency">The three digit currency string for the ledger to retrieve.</param>
 		/// <param name="dateStart">The start date for the query.</param>
@@ -423,7 +448,7 @@ namespace NBitpayClient
 
 			HttpResponseMessage response = await this.GetAsync($"ledgers/{currency}" + BuildQuery(parameters), true).ConfigureAwait(false);
 			var entries = await this.ParseResponse<List<LedgerEntry>>(response).ConfigureAwait(false);
-			return new Ledger(entries);
+			return new Ledger(null, 0, entries);
 		}
 
 		private AccessToken[] ParseTokens(string response)
