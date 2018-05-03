@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -17,12 +17,17 @@ namespace NBitpayClient
         public const String LEDGER_ZAR = "ZAR";
 
         public List<LedgerEntry> Entries = null;
+        
+        [JsonProperty(PropertyName = "currency")]
+        public string Currency { get; set; }
 
-        /// <summary>
-        /// Creates an uninitialized invoice request object.
-        /// </summary>
-        public Ledger(List<LedgerEntry> entries)
+        [JsonProperty(PropertyName = "balance")]
+        public decimal Balance { get; set; }
+
+        public Ledger(string currency, decimal balance = 0, List<LedgerEntry> entries = null)
         {
+            Currency = currency;
+            Balance = balance;
             Entries = entries;
         }
     }
