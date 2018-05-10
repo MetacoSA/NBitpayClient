@@ -344,7 +344,34 @@ namespace NBitpayClient
         private Flags Flags { get; set; }
         public bool ShouldSerializeFlags() { return false; }
 
-	}
+        public Dictionary<string,decimal> PaymentSubtotals { get; set; }
+        public bool ShouldSerializePaymentSubtotals() { return false; }
+
+        public Dictionary<string, decimal> PaymentTotals { get; set; }
+        public bool ShouldSerializePaymentTotals() { return false; }
+        public decimal AmountPaid { get; set; }
+        public bool ShouldSerializAmountPaid() { return false; }
+
+        public Dictionary<string, Dictionary<string,decimal>> ExchangeRates
+        {
+            get; set;
+        }
+        public bool ShouldSerializeExchangeRates() { return false; }
+
+
+        public Dictionary<string, InvoiceSupportedTransactionCurrency> SupportedTransactionCurrencies { get; set; }
+        public bool ShouldSerializeSupportedTransactionCurrencies() { return false; }
+
+        public Dictionary<string,string> Addresses { get; set; }
+        public bool ShouldSerializeAddresses() { return false; }
+
+        public Dictionary<string, InvoicePaymentUrls> PaymentCodes
+        {
+            get; set;
+        }
+        public bool ShouldSerializePaymentCodes() { return false; }
+
+    }
 
     class Flags
     {

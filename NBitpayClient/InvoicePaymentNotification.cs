@@ -112,5 +112,34 @@ namespace NBitpayClient
 		{
 			get; set;
 		}
-	}
+
+	    [JsonProperty(PropertyName = "transactionCurrency")]
+	    public string TransactionCurrency
+        {
+	        get; set;
+	    }
+	    [JsonProperty(PropertyName = "paymentSubtotals")]
+	    public Dictionary<string,decimal> PaymentSubtotals
+        {
+	        get; set;
+	    }
+	    [JsonProperty(PropertyName = "paymentTotals")]
+	    public Dictionary<string,decimal> PaymentTotals
+        {
+	        get; set;
+	    }
+
+	    [JsonProperty(PropertyName = "amountPaid")]
+	    [JsonConverter(typeof(MoneyJsonConverter))]
+	    public Money AmountPaid
+	    {
+	        get; set;
+	    }
+
+	    [JsonProperty(PropertyName = "exchangeRates")]
+	    public Dictionary<string, Dictionary<string, decimal>> ExchangeRates
+        {
+	        get; set;
+	    }
+    }
 }
