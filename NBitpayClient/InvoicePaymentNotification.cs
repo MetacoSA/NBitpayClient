@@ -48,7 +48,7 @@ namespace NBitpayClient
 		}
 
 		[JsonProperty(PropertyName = "price")]
-		public double Price
+		public decimal Price
 		{
 			get; set;
 		}
@@ -96,7 +96,7 @@ namespace NBitpayClient
 		}
 
 		[JsonProperty(PropertyName = "rate")]
-		public double Rate
+		public decimal Rate
 		{
 			get; set;
 		}

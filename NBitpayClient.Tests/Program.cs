@@ -137,7 +137,7 @@ namespace NBitpayClient.Tests
 		{
 			var invoice = Bitpay.CreateInvoice(new Invoice()
 			{
-				Price = 5.0,
+				Price = 5.0m,
 				Currency = "USD",
 				PosData = "posData",
 				OrderId = "orderId",
