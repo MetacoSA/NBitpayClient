@@ -345,24 +345,24 @@ namespace NBitpayClient
         public bool ShouldSerializeFlags() { return false; }
 
         public Dictionary<string, long> PaymentSubtotals { get; set; }
-        public bool ShouldSerializePaymentSubtotals() { return false; }
 
         public Dictionary<string, long> PaymentTotals { get; set; }
-        public bool ShouldSerializePaymentTotals() { return false; }
         public long AmountPaid { get; set; }
-        public bool ShouldSerializAmountPaid() { return false; }
 
         public Dictionary<string, Dictionary<string,decimal>> ExchangeRates
         {
             get; set;
         }
-        public bool ShouldSerializeExchangeRates() { return false; }
 
 
         public Dictionary<string, InvoiceSupportedTransactionCurrency> SupportedTransactionCurrencies { get; set; }
-        public bool ShouldSerializeSupportedTransactionCurrencies() { return false; }
 
-        public Dictionary<string,string> Addresses { get; set; }
+		public long MinerFees
+		{
+			get; set;
+		}
+
+		public Dictionary<string,string> Addresses { get; set; }
         public bool ShouldSerializeAddresses() { return false; }
 
         public Dictionary<string, InvoicePaymentUrls> PaymentCodes
