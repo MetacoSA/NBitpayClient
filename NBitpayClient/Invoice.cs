@@ -344,12 +344,12 @@ namespace NBitpayClient
         private Flags Flags { get; set; }
         public bool ShouldSerializeFlags() { return false; }
 
-        public Dictionary<string,decimal> PaymentSubtotals { get; set; }
+        public Dictionary<string, long> PaymentSubtotals { get; set; }
         public bool ShouldSerializePaymentSubtotals() { return false; }
 
-        public Dictionary<string, decimal> PaymentTotals { get; set; }
+        public Dictionary<string, long> PaymentTotals { get; set; }
         public bool ShouldSerializePaymentTotals() { return false; }
-        public decimal AmountPaid { get; set; }
+        public long AmountPaid { get; set; }
         public bool ShouldSerializAmountPaid() { return false; }
 
         public Dictionary<string, Dictionary<string,decimal>> ExchangeRates
