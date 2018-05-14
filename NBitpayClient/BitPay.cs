@@ -376,13 +376,35 @@ namespace NBitpayClient
             return await this.ParseResponse<Settlement[]>(response).ConfigureAwait(false);
         }
 
-		/// <summary>
-		/// Retrieve a list of invoices by date range using the merchant facade.
-		/// </summary>
-		/// <param name="dateStart">The start date for the query.</param>
-		/// <param name="dateEnd">The end date for the query.</param>
-		/// <returns>A list of invoice objects retrieved from the server.</returns>
-		public Invoice[] GetInvoices(DateTime? dateStart = null, DateTime? dateEnd = null)
+        /// <summary>
+        /// Retrieves a summary of the specified settlement.
+        /// </summary>
+        /// <param name="settlementId">Id of the settlement to fetch</param>
+        /// <returns>Settlement object</returns>
+	    public Settlement GetSettlement(string settlementId)
+	    {
+	        return GetSettlementAsync(settlementId).GetAwaiter().GetResult();
+	    }
+
+	    /// <summary>
+	    /// Retrieves a summary of the specified settlement.
+	    /// </summary>
+	    /// <param name="settlementId">Id of the settlement to fetch</param>
+	    /// <returns>Settlement object</returns>
+	    public async Task<Settlement> GetSettlementAsync(string settlementId)
+	    {
+	        var token = (await GetAccessTokenAsync(Facade.Merchant).ConfigureAwait(false)).Value;
+	        HttpResponseMessage response = await this.GetAsync($"settlements/{settlementId}?token={token}", true).ConfigureAwait(false);
+            return await this.ParseResponse<Settlement>(response).ConfigureAwait(false);
+	    }
+
+        /// <summary>
+        /// Retrieve a list of invoices by date range using the merchant facade.
+        /// </summary>
+        /// <param name="dateStart">The start date for the query.</param>
+        /// <param name="dateEnd">The end date for the query.</param>
+        /// <returns>A list of invoice objects retrieved from the server.</returns>
+        public Invoice[] GetInvoices(DateTime? dateStart = null, DateTime? dateEnd = null)
 		{
 			return GetInvoicesAsync(dateStart, dateEnd).GetAwaiter().GetResult();
 		}
