@@ -329,6 +329,52 @@ namespace NBitpayClient
 			}
 			return await this.ParseResponse<Invoice>(response).ConfigureAwait(false);
 		}
+		
+		/// <summary>
+        /// Retrieves settlement reports for the calling merchant filtered by query. The `limit` and `offset` parameters specify pages for large query sets.
+        /// </summary>
+        /// <param name="startDate">Date filter start (optional)</param>
+        /// <param name="endDate">Date filter end (optional)</param>
+        /// <param name="currency">Currency filter (optional)</param>
+        /// <param name="status">Status filter (optional)</param>
+        /// <param name="limit">Pagination entries ceiling (default:50)</param>
+        /// <param name="offset">Pagination quantity offset (default:0)</param>
+        /// <returns>Array of Settlements</returns>
+        public Settlement[] GetSettlements(DateTime? startDate = null, DateTime? endDate = null, string currency = null, string status = null, int limit = 50, int offset = 0)
+        {
+            return GetSettlementsAsync(startDate, endDate, currency, status, limit, offset).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Retrieves settlement reports for the calling merchant filtered by query. The `limit` and `offset` parameters specify pages for large query sets.
+        /// </summary>
+        /// <param name="startDate">Date filter start (optional)</param>
+        /// <param name="endDate">Date filter end (optional)</param>
+        /// <param name="currency">Currency filter (optional)</param>
+        /// <param name="status">Status filter (optional)</param>
+        /// <param name="limit">Pagination entries ceiling (default:50)</param>
+        /// <param name="offset">Pagination quantity offset (default:0)</param>
+        /// <returns>Array of Settlements</returns>
+        public async Task<Settlement[]> GetSettlementsAsync(DateTime? startDate = null, DateTime? endDate = null, string currency = null, string status = null, int limit = 50, int offset = 0)
+        {
+            var token = await this.GetAccessTokenAsync(Facade.Merchant).ConfigureAwait(false);
+
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            parameters.Add("token", token.Value);
+            if (startDate != null)
+                parameters.Add("startDate", startDate.Value.ToString("d", CultureInfo.InvariantCulture));
+            if (endDate != null)
+                parameters.Add("endDate", endDate.Value.ToString("d", CultureInfo.InvariantCulture));
+            if (currency != null)
+                parameters.Add("currency", currency);
+            if (status != null)
+                parameters.Add("status", status);
+            parameters.Add("limit", $"{limit}");
+            parameters.Add("offset", $"{offset}");
+
+            HttpResponseMessage response = await this.GetAsync($"settlements" + BuildQuery(parameters), true).ConfigureAwait(false);
+            return await this.ParseResponse<Settlement[]>(response).ConfigureAwait(false);
+        }
 
 		/// <summary>
 		/// Retrieve a list of invoices by date range using the merchant facade.
