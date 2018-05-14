@@ -1,22 +1,15 @@
 using NBitcoin;
-using NBitcoin.Crypto;
-using NBitcoin.DataEncoders;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NBitpayClient.Extensions;
-
 
 namespace NBitpayClient
 {
@@ -36,7 +29,6 @@ namespace NBitpayClient
 			_Value = value;
 		}
 
-
 		public override bool Equals(object obj)
 		{
 			Facade item = obj as Facade;
@@ -44,11 +36,12 @@ namespace NBitpayClient
 				return false;
 			return _Value.Equals(item._Value);
 		}
+
 		public static bool operator ==(Facade a, Facade b)
 		{
-			if(System.Object.ReferenceEquals(a, b))
+			if(ReferenceEquals(a, b))
 				return true;
-			if(((object)a == null) || ((object)b == null))
+			if((object)a == null || (object)b == null)
 				return false;
 			return a._Value == b._Value;
 		}
@@ -73,9 +66,7 @@ namespace NBitpayClient
 	{
 		public PairingCode(string value)
 		{
-			if(value == null)
-				throw new ArgumentNullException(nameof(value));
-			_Value = value;
+            _Value = value ?? throw new ArgumentNullException(nameof(value));
 		}
 
 		readonly string _Value;
@@ -325,9 +316,9 @@ namespace NBitpayClient
 			}
 			else
 			{
-				response = await this.GetAsync($"invoices/" + invoiceId, true).ConfigureAwait(false);
+				response = await GetAsync($"invoices/" + invoiceId, true).ConfigureAwait(false);
 			}
-			return await this.ParseResponse<Invoice>(response).ConfigureAwait(false);
+			return await ParseResponse<Invoice>(response).ConfigureAwait(false);
 		}
 		
 		/// <summary>
@@ -340,7 +331,7 @@ namespace NBitpayClient
         /// <param name="limit">Pagination entries ceiling (default:50)</param>
         /// <param name="offset">Pagination quantity offset (default:0)</param>
         /// <returns>Array of Settlements</returns>
-        public Settlement[] GetSettlements(DateTime? startDate = null, DateTime? endDate = null, string currency = null, string status = null, int limit = 50, int offset = 0)
+        public SettlementSummary[] GetSettlements(DateTime? startDate = null, DateTime? endDate = null, string currency = null, string status = null, int limit = 50, int offset = 0)
         {
             return GetSettlementsAsync(startDate, endDate, currency, status, limit, offset).GetAwaiter().GetResult();
         }
@@ -355,11 +346,11 @@ namespace NBitpayClient
         /// <param name="limit">Pagination entries ceiling (default:50)</param>
         /// <param name="offset">Pagination quantity offset (default:0)</param>
         /// <returns>Array of Settlements</returns>
-        public async Task<Settlement[]> GetSettlementsAsync(DateTime? startDate = null, DateTime? endDate = null, string currency = null, string status = null, int limit = 50, int offset = 0)
+        public async Task<SettlementSummary[]> GetSettlementsAsync(DateTime? startDate = null, DateTime? endDate = null, string currency = null, string status = null, int limit = 50, int offset = 0)
         {
             var token = await this.GetAccessTokenAsync(Facade.Merchant).ConfigureAwait(false);
 
-            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            var parameters = new Dictionary<string, string>();
             parameters.Add("token", token.Value);
             if (startDate != null)
                 parameters.Add("startDate", startDate.Value.ToString("d", CultureInfo.InvariantCulture));
@@ -372,8 +363,8 @@ namespace NBitpayClient
             parameters.Add("limit", $"{limit}");
             parameters.Add("offset", $"{offset}");
 
-            HttpResponseMessage response = await this.GetAsync($"settlements" + BuildQuery(parameters), true).ConfigureAwait(false);
-            return await this.ParseResponse<Settlement[]>(response).ConfigureAwait(false);
+            var response = await GetAsync("settlements" + BuildQuery(parameters), true).ConfigureAwait(false);
+            return await ParseResponse<SettlementSummary[]>(response).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -381,9 +372,9 @@ namespace NBitpayClient
         /// </summary>
         /// <param name="settlementId">Id of the settlement to fetch</param>
         /// <returns>Settlement object</returns>
-	    public Settlement GetSettlement(string settlementId)
+	    public SettlementSummary GetSettlementSummary(string settlementId)
 	    {
-	        return GetSettlementAsync(settlementId).GetAwaiter().GetResult();
+	        return GetSettlementSummaryAsync(settlementId).GetAwaiter().GetResult();
 	    }
 
 	    /// <summary>
@@ -391,33 +382,34 @@ namespace NBitpayClient
 	    /// </summary>
 	    /// <param name="settlementId">Id of the settlement to fetch</param>
 	    /// <returns>Settlement object</returns>
-	    public async Task<Settlement> GetSettlementAsync(string settlementId)
+	    public async Task<SettlementSummary> GetSettlementSummaryAsync(string settlementId)
 	    {
 	        var token = (await GetAccessTokenAsync(Facade.Merchant).ConfigureAwait(false)).Value;
-	        HttpResponseMessage response = await this.GetAsync($"settlements/{settlementId}?token={token}", true).ConfigureAwait(false);
-            return await this.ParseResponse<Settlement>(response).ConfigureAwait(false);
+	        var response = await GetAsync($"settlements/{settlementId}?token={token}", true).ConfigureAwait(false);
+            return await ParseResponse<SettlementSummary>(response).ConfigureAwait(false);
 	    }
 
         /// <summary>
         /// Gets a detailed reconciliation report of the activity within the settlement period
         /// </summary>
         /// <param name="settlementId">Id of the settlement to fetch</param>
+        /// <param name="settlementSummaryToken">Resource token from /settlements/{settlementId}</param>
         /// <returns>SettlementReconciliationReport object</returns>
-        public SettlementReconciliationReport GetSettlementReconciliationReport(string settlementId)
+        public SettlementReconciliationReport GetSettlementReconciliationReport(string settlementId, string settlementSummaryToken)
 	    {
-	        return GetSettlementReconciliationReportAsync(settlementId).GetAwaiter().GetResult();
+	        return GetSettlementReconciliationReportAsync(settlementId, settlementSummaryToken).GetAwaiter().GetResult();
 	    }
 
         /// <summary>
         /// Gets a detailed reconciliation report of the activity within the settlement period
         /// </summary>
         /// <param name="settlementId">Id of the settlement to fetch</param>
+        /// <param name="settlementSummaryToken">Resource token from /settlements/{settlementId}</param>
         /// <returns>SettlementReconciliationReport object</returns>
-        public async Task<SettlementReconciliationReport> GetSettlementReconciliationReportAsync(string settlementId)
+        public async Task<SettlementReconciliationReport> GetSettlementReconciliationReportAsync(string settlementId, string settlementSummaryToken)
 	    {
-	        var token = (await GetAccessTokenAsync(Facade.Merchant).ConfigureAwait(false)).Value;
-	        HttpResponseMessage response = await this.GetAsync($"settlements/{settlementId}/reconciliationReport?token={token}", true).ConfigureAwait(false);
-	        return await this.ParseResponse<SettlementReconciliationReport>(response).ConfigureAwait(false);
+	        var response = await GetAsync($"settlements/{settlementId}/reconciliationReport?token={settlementSummaryToken}", true).ConfigureAwait(false);
+	        return await ParseResponse<SettlementReconciliationReport>(response).ConfigureAwait(false);
 	    }
 
         /// <summary>
@@ -441,19 +433,19 @@ namespace NBitpayClient
 		{
 			var token = await this.GetAccessTokenAsync(Facade.Merchant).ConfigureAwait(false);
 
-			Dictionary<string, string> parameters = new Dictionary<string, string>();
+		    var parameters = new Dictionary<string, string>();
 			parameters.Add("token", token.Value);
 			if(dateStart != null)
 				parameters.Add("dateStart", dateStart.Value.ToString("d", CultureInfo.InvariantCulture));
 			if(dateEnd != null)
 				parameters.Add("dateEnd", dateEnd.Value.ToString("d", CultureInfo.InvariantCulture));
-			HttpResponseMessage response = await this.GetAsync($"invoices" + BuildQuery(parameters), true).ConfigureAwait(false);
-			return await this.ParseResponse<Invoice[]>(response).ConfigureAwait(false);
+			var response = await GetAsync($"invoices" + BuildQuery(parameters), true).ConfigureAwait(false);
+			return await ParseResponse<Invoice[]>(response).ConfigureAwait(false);
 		}
 
 		private string BuildQuery(Dictionary<string, string> parameters)
 		{
-			var result = String.Join("&", parameters
+			var result = string.Join("&", parameters
 				.Select(p => $"{p.Key}={p.Value}")
 				.ToArray());
 			if(string.IsNullOrEmpty(result))
