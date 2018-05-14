@@ -1,13 +1,9 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 
 namespace NBitpayClient
 {
     public class Withholdings
     {
-        public Withholdings() { }
-
         [JsonProperty(PropertyName = "amount")]
         public decimal Amount { get; set; }
 
@@ -19,6 +15,5 @@ namespace NBitpayClient
 
         [JsonProperty(PropertyName = "notes")]
         public string Notes { get; set; }
-
     }
 }

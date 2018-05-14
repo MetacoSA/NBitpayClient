@@ -399,6 +399,28 @@ namespace NBitpayClient
 	    }
 
         /// <summary>
+        /// Gets a detailed reconciliation report of the activity within the settlement period
+        /// </summary>
+        /// <param name="settlementId">Id of the settlement to fetch</param>
+        /// <returns>SettlementReconciliationReport object</returns>
+        public SettlementReconciliationReport GetSettlementReconciliationReport(string settlementId)
+	    {
+	        return GetSettlementReconciliationReportAsync(settlementId).GetAwaiter().GetResult();
+	    }
+
+        /// <summary>
+        /// Gets a detailed reconciliation report of the activity within the settlement period
+        /// </summary>
+        /// <param name="settlementId">Id of the settlement to fetch</param>
+        /// <returns>SettlementReconciliationReport object</returns>
+        public async Task<SettlementReconciliationReport> GetSettlementReconciliationReportAsync(string settlementId)
+	    {
+	        var token = (await GetAccessTokenAsync(Facade.Merchant).ConfigureAwait(false)).Value;
+	        HttpResponseMessage response = await this.GetAsync($"settlements/{settlementId}/reconciliationReport?token={token}", true).ConfigureAwait(false);
+	        return await this.ParseResponse<SettlementReconciliationReport>(response).ConfigureAwait(false);
+	    }
+
+        /// <summary>
         /// Retrieve a list of invoices by date range using the merchant facade.
         /// </summary>
         /// <param name="dateStart">The start date for the query.</param>

@@ -1,13 +1,9 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 
 namespace NBitpayClient
 {
     public class PayoutInfo
     {
-        public PayoutInfo() { }
-
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
         

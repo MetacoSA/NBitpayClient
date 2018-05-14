@@ -6,8 +6,6 @@ namespace NBitpayClient
 {
     public class Settlement
     {
-        public Settlement() { }
-
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
 
