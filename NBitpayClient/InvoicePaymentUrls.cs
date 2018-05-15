@@ -22,5 +22,11 @@ namespace NBitpayClient
 		public string BIP72b { get; set; }
 		[JsonProperty("BIP73")]
 		public string BIP73 { get; set; }
+
+		[JsonProperty("BOLT11")]
+		public string BOLT11
+		{
+			get; set;
+		}
 	}
 }

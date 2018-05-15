@@ -31,7 +31,7 @@ namespace NBitpayClient
 
 		//"exRates":{"USD":4320.02}
 		[JsonProperty("exRates")]
-		public Dictionary<string, double> ExRates
+		public Dictionary<string, decimal> ExRates
 		{
 			get; set;
 		}
@@ -131,7 +131,7 @@ namespace NBitpayClient
         public Invoice() {}
 
         // Creates a minimal inovice request object.
-        public Invoice(double price, String currency)
+        public Invoice(decimal price, String currency)
         {
             Price = price;
             Currency = currency;
@@ -157,7 +157,7 @@ namespace NBitpayClient
         //
 
         [JsonProperty(PropertyName = "price")]
-        public double Price { get; set; }
+        public decimal Price { get; set; }
 
         String _currency = "";
         [JsonProperty(PropertyName = "currency")]
@@ -313,7 +313,7 @@ namespace NBitpayClient
 		public List<InvoiceTransaction> Transactions { get; set; }
         public bool ShouldSerializeTransactions() { return false; }
 
-        public double Rate { get; set; }
+        public decimal Rate { get; set; }
         public bool ShouldSerializeRate() { return false; }
 
         public Dictionary<string, string> ExRates { get; set; }
@@ -344,7 +344,34 @@ namespace NBitpayClient
         private Flags Flags { get; set; }
         public bool ShouldSerializeFlags() { return false; }
 
-	}
+        public Dictionary<string, long> PaymentSubtotals { get; set; }
+
+        public Dictionary<string, long> PaymentTotals { get; set; }
+        public long AmountPaid { get; set; }
+
+        public Dictionary<string, Dictionary<string,decimal>> ExchangeRates
+        {
+            get; set;
+        }
+
+
+        public Dictionary<string, InvoiceSupportedTransactionCurrency> SupportedTransactionCurrencies { get; set; }
+
+		public long MinerFees
+		{
+			get; set;
+		}
+
+		public Dictionary<string,string> Addresses { get; set; }
+        public bool ShouldSerializeAddresses() { return false; }
+
+        public Dictionary<string, InvoicePaymentUrls> PaymentCodes
+        {
+            get; set;
+        }
+        public bool ShouldSerializePaymentCodes() { return false; }
+
+    }
 
     class Flags
     {
