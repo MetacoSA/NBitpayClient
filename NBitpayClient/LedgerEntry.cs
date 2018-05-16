@@ -6,7 +6,8 @@ namespace NBitpayClient
 {
     public class LedgerEntry
     {
-        public LedgerEntry() {}
+        [JsonProperty(PropertyName = "id")]
+        public string Id { get; set; }
 
         [JsonProperty(PropertyName = "code")]
         public string Code { get; set; }
@@ -45,6 +46,18 @@ namespace NBitpayClient
         public double InvoiceAmount { get; set; }
 
         [JsonProperty(PropertyName = "invoiceCurrency")]
-        public string invoiceCurrency { get; set; }
+        public string InvoiceCurrency { get; set; }
+
+        [JsonProperty(PropertyName = "description")]
+        public string Description { get; set; }
+
+        [JsonProperty(PropertyName = "type")]
+        public string Type { get; set; }
+
+        [JsonProperty(PropertyName = "transactionCurrency")]
+        public string TransactionCurrency { get; set; }
+
+        [JsonProperty(PropertyName = "buyerFields")]
+        public Dictionary<string, string> BuyerFields { get; set; }
     }
 }
