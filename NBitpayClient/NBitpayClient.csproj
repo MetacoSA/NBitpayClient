@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard1.3</TargetFramework>
 		<Company>Metaco SA</Company>
-		<Version>1.0.0.24</Version>
+		<Version>1.0.0.25</Version>
 		<Copyright>Copyright © Metaco SA 2017</Copyright>
 		<Description>Non official .NET Bitpay API compatible client</Description>
 		<PackageTags>bitcoin</PackageTags>

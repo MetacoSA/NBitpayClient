@@ -8,6 +8,19 @@ using Newtonsoft.Json.Linq;
 
 namespace NBitpayClient
 {
+	public class MinerFeeInfo
+	{
+		[JsonProperty("satoshisPerByte")]
+		public decimal SatoshiPerBytes
+		{
+			get; set;
+		}
+		[JsonProperty("totalFee")]
+		public long TotalFee
+		{
+			get; set;
+		}
+	}
 
 	public class InvoiceCryptoInfo
 	{
@@ -353,7 +366,7 @@ namespace NBitpayClient
 
 		public Dictionary<string, InvoiceSupportedTransactionCurrency> SupportedTransactionCurrencies { get; set; }
 
-		public Dictionary<string, Dictionary<string, decimal>> MinerFees { get; set; }
+		public Dictionary<string, MinerFeeInfo> MinerFees { get; set; }
 
 		public Dictionary<string, string> Addresses { get; set; }
 		public bool ShouldSerializeAddresses() { return false; }
