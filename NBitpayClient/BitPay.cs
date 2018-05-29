@@ -453,31 +453,60 @@ namespace NBitpayClient
 			return "?" + result;
 		}
 
-		/// <summary>
-		/// Retrieve the exchange rate table using the public facade.
-		/// </summary>
-		/// <returns>The rate table as an object retrieved from the server.</returns>
-		public Rates GetRates()
+        /// <summary>
+        /// Retrieve the exchange rate table using the public facade.
+        /// </summary>
+        /// <param name="baseCurrencyCode">What currency to base the result rates on</param>
+        /// <returns>The rate table as an object retrieved from the server.</returns>
+        public Rates GetRates(string baseCurrencyCode = null)
 		{
-			return GetRatesAsync().GetAwaiter().GetResult();
+			return GetRatesAsync(baseCurrencyCode).GetAwaiter().GetResult();
 		}
 
-		/// <summary>
-		/// Retrieve the exchange rate table using the public facade.
-		/// </summary>
-		/// <returns>The rate table as an object retrieved from the server.</returns>
-		public async Task<Rates> GetRatesAsync()
+        /// <summary>
+        /// Retrieve the exchange rate table using the public facade.
+        /// </summary>
+        /// <param name="baseCurrencyCode">What currency to base the result rates on</param>
+        /// <returns>The rate table as an object retrieved from the server.</returns>
+        public async Task<Rates> GetRatesAsync(string baseCurrencyCode = null)
 		{
-			HttpResponseMessage response = await this.GetAsync("rates", false).ConfigureAwait(false);
+            var url = $"rates{(string.IsNullOrEmpty(baseCurrencyCode) ? $"/{baseCurrencyCode}" : String.Empty)}";
+
+            HttpResponseMessage response = await this.GetAsync(url, false).ConfigureAwait(false);
 			var rates = await this.ParseResponse<List<Rate>>(response).ConfigureAwait(false);
 			return new Rates(rates);
 		}
 
-		/// <summary>
-		/// Retrieves the caller's ledgers for each currency with summary.
-		/// </summary>
-		/// <returns>A list of ledger objects retrieved from the server.</returns>
-		public List<Ledger> GetLedgers()
+        /// <summary>
+        /// Retrieves the exchange rate for the given currency using the public facade.
+        /// </summary>
+        /// <param name="baseCurrencyCode">The currency to base the result rate on</param>
+        /// <param name="currencyCode">The target currency to get the rate for</param>
+        /// <returns>The rate as an object retrieved from the server.</returns>
+        public Rate GetRate(string baseCurrencyCode, string currencyCode)
+	    {
+	        return GetRateAsync(baseCurrencyCode, currencyCode).GetAwaiter().GetResult();
+        }
+
+	    /// <summary>
+        /// Retrieves the exchange rate for the given currency using the public facade.
+        /// </summary>
+        /// <param name="baseCurrencyCode">The currency to base the result rate on</param>
+        /// <param name="currencyCode">The target currency to get the rate for</param>
+        /// <returns>The rate as an object retrieved from the server.</returns>
+        public async Task<Rate> GetRateAsync(string baseCurrencyCode, string currencyCode)
+        {
+	        var url = $"rates/{baseCurrencyCode}/{currencyCode}";
+	        HttpResponseMessage response = await this.GetAsync(url, false).ConfigureAwait(false);
+	        var rate = await this.ParseResponse<Rate>(response).ConfigureAwait(false);
+	        return rate;
+	    }
+
+	    /// <summary>
+        /// Retrieves the caller's ledgers for each currency with summary.
+        /// </summary>
+        /// <returns>A list of ledger objects retrieved from the server.</returns>
+        public List<Ledger> GetLedgers()
 		{
 			return GetLedgersAsync().GetAwaiter().GetResult();
 		}

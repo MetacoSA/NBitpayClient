@@ -1,8 +1,6 @@
 ﻿using NBitcoin;
 using System;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -10,7 +8,6 @@ using NBitcoin.RPC;
 using NBitcoin.Payment;
 using Newtonsoft.Json;
 using NBitpayClient.Extensions;
-using NBitcoin.DataEncoders;
 
 namespace NBitpayClient.Tests
 {
@@ -164,7 +161,17 @@ namespace NBitpayClient.Tests
 			var rates = Bitpay.GetRates();
 			Assert.NotNull(rates);
 			Assert.True(rates.AllRates.Count > 0);
-		}
+
+		    var btcrates = Bitpay.GetRates("BTC");
+		    Assert.NotNull(rates);
+		    Assert.True(btcrates.AllRates.Count > 0);
+
+
+		    var btcusd = Bitpay.GetRate("BTC", "USD");
+		    Assert.NotNull(btcusd);
+		    Assert.Equal(btcusd.Code, "USD");
+
+        }
 
 		private void EnsureRegisteredKey()
 		{
