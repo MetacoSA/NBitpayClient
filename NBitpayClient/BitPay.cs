@@ -696,16 +696,26 @@ namespace NBitpayClient
 			// A data object has its content extracted (throw away the data wrapper object).
 			String responseString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 			
-			if(responseString[0] == '[') {
+			if(responseString.Length > 0 && responseString[0] == '[') {
 				// some endpoints return an array at the root (like /Ledgers/{currency}).
 				// without short circuiting here, the JObject.Parse will throw
 				return JsonConvert.DeserializeObject<T>(responseString);
 			}
-			
-			var obj = JObject.Parse(responseString);
 
-			// Check for error response.
-			if(obj.Property("error") != null)
+            JObject obj = null;
+            try
+            {
+                obj = JObject.Parse(responseString);
+            }
+            catch
+            {
+                // Probably a http error, send this instead of parsing error.
+                response.EnsureSuccessStatusCode();
+                throw;
+            }
+
+            // Check for error response.
+            if (obj.Property("error") != null)
 			{
 				var ex = new BitPayException();
 				ex.AddError(obj.Property("error").Value.ToString());
