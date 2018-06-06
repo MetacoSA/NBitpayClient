@@ -586,6 +586,8 @@ namespace NBitpayClient
 		public async Task<AccessToken[]> GetAccessTokensAsync()
 		{
 			HttpResponseMessage response = await this.GetAsync("tokens", true).ConfigureAwait(false);
+            if (!response.IsSuccessStatusCode)
+                return new AccessToken[0];
 			response.EnsureSuccessStatusCode();
 			var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 			return ParseTokens(result);
