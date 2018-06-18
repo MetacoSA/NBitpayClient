@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace NBitpayClient
 {
@@ -21,7 +22,7 @@ namespace NBitpayClient
         public decimal OverPaidAmount { get; set; }
 
         [JsonProperty(PropertyName = "payoutPercentage")]
-        public double PayoutPercentage { get; set; }
+        public Dictionary<string, double> PayoutPercentage { get; set; }
 
         [JsonProperty(PropertyName = "btcPrice")]
         public decimal BtcPrice { get; set; }
