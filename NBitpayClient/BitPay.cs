@@ -472,7 +472,7 @@ namespace NBitpayClient
 		{
             var url = $"rates{(string.IsNullOrEmpty(baseCurrencyCode) ? $"/{baseCurrencyCode}" : String.Empty)}";
 
-            HttpResponseMessage response = await this.GetAsync(url, false).ConfigureAwait(false);
+            HttpResponseMessage response = await this.GetAsync(url, true).ConfigureAwait(false);
 			var rates = await this.ParseResponse<List<Rate>>(response).ConfigureAwait(false);
 			return new Rates(rates);
 		}
@@ -497,7 +497,7 @@ namespace NBitpayClient
         public async Task<Rate> GetRateAsync(string baseCurrencyCode, string currencyCode)
         {
 	        var url = $"rates/{baseCurrencyCode}/{currencyCode}";
-	        HttpResponseMessage response = await this.GetAsync(url, false).ConfigureAwait(false);
+	        HttpResponseMessage response = await this.GetAsync(url, true).ConfigureAwait(false);
 	        var rate = await this.ParseResponse<Rate>(response).ConfigureAwait(false);
 	        return rate;
 	    }
