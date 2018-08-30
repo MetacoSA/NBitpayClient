@@ -202,7 +202,7 @@ namespace NBitpayClient
 		/// Authorize (pair) this client with the server using the specified pairing code.
 		/// </summary>
 		/// <param name="pairingCode">A code obtained from the server; typically from bitpay.com/api-tokens.</param>
-		public async Task AuthorizeClient(PairingCode pairingCode)
+		public virtual async Task AuthorizeClient(PairingCode pairingCode)
 		{
 			Token token = new Token();
 			token.Id = _Auth.SIN;
@@ -224,18 +224,18 @@ namespace NBitpayClient
 		/// <param name="label">The label of this token.</param>
 		/// <param name="facade">The facade for which authorization is requested.</param>
 		/// <returns>A pairing code for this client.  This code must be used to authorize this client at BitPay.com/api-tokens.</returns>
-		public PairingCode RequestClientAuthorization(string label, Facade facade)
+		public virtual PairingCode RequestClientAuthorization(string label, Facade facade)
 		{
 			return RequestClientAuthorizationAsync(label, facade).GetAwaiter().GetResult();
 		}
 
-		/// <summary>
-		/// Request authorization (a token) for this client in the specified facade.
-		/// </summary>
-		/// <param name="label">The label of this token.</param>
-		/// <param name="facade">The facade for which authorization is requested.</param>
-		/// <returns>A pairing code for this client.  This code must be used to authorize this client at BitPay.com/api-tokens.</returns>
-		public async Task<PairingCode> RequestClientAuthorizationAsync(string label, Facade facade)
+        /// <summary>
+        /// Request authorization (a token) for this client in the specified facade.
+        /// </summary>
+        /// <param name="label">The label of this token.</param>
+        /// <param name="facade">The facade for which authorization is requested.</param>
+        /// <returns>A pairing code for this client.  This code must be used to authorize this client at BitPay.com/api-tokens.</returns>
+        public virtual async Task<PairingCode> RequestClientAuthorizationAsync(string label, Facade facade)
 		{
 			Token token = new Token();
 			token.Id = _Auth.SIN;
@@ -255,24 +255,24 @@ namespace NBitpayClient
 			return new PairingCode(tokens[0].PairingCode);
 		}
 
-		/// <summary>
-		/// Create an invoice using the specified facade.
-		/// </summary>
-		/// <param name="invoice">An invoice request object.</param>
-		/// <param name="facade">The facade used (default POS).</param>
-		/// <returns>A new invoice object returned from the server.</returns>
-		public Invoice CreateInvoice(Invoice invoice, Facade facade = null)
+        /// <summary>
+        /// Create an invoice using the specified facade.
+        /// </summary>
+        /// <param name="invoice">An invoice request object.</param>
+        /// <param name="facade">The facade used (default POS).</param>
+        /// <returns>A new invoice object returned from the server.</returns>
+        public virtual Invoice CreateInvoice(Invoice invoice, Facade facade = null)
 		{
 			return CreateInvoiceAsync(invoice, facade).GetAwaiter().GetResult();
 		}
 
-		/// <summary>
-		/// Create an invoice using the specified facade.
-		/// </summary>
-		/// <param name="invoice">An invoice request object.</param>
-		/// <param name="facade">The facade used (default POS).</param>
-		/// <returns>A new invoice object returned from the server.</returns>
-		public async Task<Invoice> CreateInvoiceAsync(Invoice invoice, Facade facade = null)
+        /// <summary>
+        /// Create an invoice using the specified facade.
+        /// </summary>
+        /// <param name="invoice">An invoice request object.</param>
+        /// <param name="facade">The facade used (default POS).</param>
+        /// <returns>A new invoice object returned from the server.</returns>
+        public virtual async Task<Invoice> CreateInvoiceAsync(Invoice invoice, Facade facade = null)
 		{
 			facade = facade ?? Facade.PointOfSale;
 			invoice.Token = (await this.GetAccessTokenAsync(facade).ConfigureAwait(false)).Value;
@@ -285,24 +285,24 @@ namespace NBitpayClient
 			return invoice;
 		}
 
-		/// <summary>
-		/// Retrieve an invoice by id and token.
-		/// </summary>
-		/// <param name="invoiceId">The id of the requested invoice.</param>
-		/// <param name="facade">The facade used (default POS).</param>
-		/// <returns>The invoice object retrieved from the server.</returns>
-		public Invoice GetInvoice(String invoiceId, Facade facade = null)
+        /// <summary>
+        /// Retrieve an invoice by id and token.
+        /// </summary>
+        /// <param name="invoiceId">The id of the requested invoice.</param>
+        /// <param name="facade">The facade used (default POS).</param>
+        /// <returns>The invoice object retrieved from the server.</returns>
+        public virtual Invoice GetInvoice(String invoiceId, Facade facade = null)
 		{
 			return GetInvoiceAsync(invoiceId, facade).GetAwaiter().GetResult();
 		}
 
-		/// <summary>
-		/// Retrieve an invoice by id and token.
-		/// </summary>
-		/// <param name="invoiceId">The id of the requested invoice.</param>
-		/// <param name="facade">The facade used (default POS).</param>
-		/// <returns>The invoice object retrieved from the server.</returns>
-		public async Task<Invoice> GetInvoiceAsync(String invoiceId, Facade facade = null)
+        /// <summary>
+        /// Retrieve an invoice by id and token.
+        /// </summary>
+        /// <param name="invoiceId">The id of the requested invoice.</param>
+        /// <param name="facade">The facade used (default POS).</param>
+        /// <returns>The invoice object retrieved from the server.</returns>
+        public virtual async Task<Invoice> GetInvoiceAsync(String invoiceId, Facade facade = null)
 		{
 			facade = facade ?? Facade.Merchant;
 			// Provide the merchant token whenthe merchant facade is being used.
@@ -320,8 +320,8 @@ namespace NBitpayClient
 			}
 			return await ParseResponse<Invoice>(response).ConfigureAwait(false);
 		}
-		
-		/// <summary>
+
+        /// <summary>
         /// Retrieves settlement reports for the calling merchant filtered by query. The `limit` and `offset` parameters specify pages for large query sets.
         /// </summary>
         /// <param name="startDate">Date filter start (optional)</param>
@@ -331,7 +331,7 @@ namespace NBitpayClient
         /// <param name="limit">Pagination entries ceiling (default:50)</param>
         /// <param name="offset">Pagination quantity offset (default:0)</param>
         /// <returns>Array of Settlements</returns>
-        public SettlementSummary[] GetSettlements(DateTime? startDate = null, DateTime? endDate = null, string currency = null, string status = null, int limit = 50, int offset = 0)
+        public virtual SettlementSummary[] GetSettlements(DateTime? startDate = null, DateTime? endDate = null, string currency = null, string status = null, int limit = 50, int offset = 0)
         {
             return GetSettlementsAsync(startDate, endDate, currency, status, limit, offset).GetAwaiter().GetResult();
         }
@@ -346,7 +346,7 @@ namespace NBitpayClient
         /// <param name="limit">Pagination entries ceiling (default:50)</param>
         /// <param name="offset">Pagination quantity offset (default:0)</param>
         /// <returns>Array of Settlements</returns>
-        public async Task<SettlementSummary[]> GetSettlementsAsync(DateTime? startDate = null, DateTime? endDate = null, string currency = null, string status = null, int limit = 50, int offset = 0)
+        public virtual async Task<SettlementSummary[]> GetSettlementsAsync(DateTime? startDate = null, DateTime? endDate = null, string currency = null, string status = null, int limit = 50, int offset = 0)
         {
             var token = await this.GetAccessTokenAsync(Facade.Merchant).ConfigureAwait(false);
 
@@ -372,17 +372,17 @@ namespace NBitpayClient
         /// </summary>
         /// <param name="settlementId">Id of the settlement to fetch</param>
         /// <returns>Settlement object</returns>
-	    public SettlementSummary GetSettlementSummary(string settlementId)
+	    public virtual SettlementSummary GetSettlementSummary(string settlementId)
 	    {
 	        return GetSettlementSummaryAsync(settlementId).GetAwaiter().GetResult();
 	    }
 
-	    /// <summary>
-	    /// Retrieves a summary of the specified settlement.
-	    /// </summary>
-	    /// <param name="settlementId">Id of the settlement to fetch</param>
-	    /// <returns>Settlement object</returns>
-	    public async Task<SettlementSummary> GetSettlementSummaryAsync(string settlementId)
+        /// <summary>
+        /// Retrieves a summary of the specified settlement.
+        /// </summary>
+        /// <param name="settlementId">Id of the settlement to fetch</param>
+        /// <returns>Settlement object</returns>
+        public virtual async Task<SettlementSummary> GetSettlementSummaryAsync(string settlementId)
 	    {
 	        var token = (await GetAccessTokenAsync(Facade.Merchant).ConfigureAwait(false)).Value;
 	        var response = await GetAsync($"settlements/{settlementId}?token={token}", true).ConfigureAwait(false);
@@ -395,7 +395,7 @@ namespace NBitpayClient
         /// <param name="settlementId">Id of the settlement to fetch</param>
         /// <param name="settlementSummaryToken">Resource token from /settlements/{settlementId}</param>
         /// <returns>SettlementReconciliationReport object</returns>
-        public SettlementReconciliationReport GetSettlementReconciliationReport(string settlementId, string settlementSummaryToken)
+        public virtual SettlementReconciliationReport GetSettlementReconciliationReport(string settlementId, string settlementSummaryToken)
 	    {
 	        return GetSettlementReconciliationReportAsync(settlementId, settlementSummaryToken).GetAwaiter().GetResult();
 	    }
@@ -406,7 +406,7 @@ namespace NBitpayClient
         /// <param name="settlementId">Id of the settlement to fetch</param>
         /// <param name="settlementSummaryToken">Resource token from /settlements/{settlementId}</param>
         /// <returns>SettlementReconciliationReport object</returns>
-        public async Task<SettlementReconciliationReport> GetSettlementReconciliationReportAsync(string settlementId, string settlementSummaryToken)
+        public virtual async Task<SettlementReconciliationReport> GetSettlementReconciliationReportAsync(string settlementId, string settlementSummaryToken)
 	    {
 	        var response = await GetAsync($"settlements/{settlementId}/reconciliationReport?token={settlementSummaryToken}", true).ConfigureAwait(false);
 	        return await ParseResponse<SettlementReconciliationReport>(response).ConfigureAwait(false);
@@ -418,18 +418,18 @@ namespace NBitpayClient
         /// <param name="dateStart">The start date for the query.</param>
         /// <param name="dateEnd">The end date for the query.</param>
         /// <returns>A list of invoice objects retrieved from the server.</returns>
-        public Invoice[] GetInvoices(DateTime? dateStart = null, DateTime? dateEnd = null)
+        public virtual Invoice[] GetInvoices(DateTime? dateStart = null, DateTime? dateEnd = null)
 		{
 			return GetInvoicesAsync(dateStart, dateEnd).GetAwaiter().GetResult();
 		}
 
-		/// <summary>
-		/// Retrieve a list of invoices by date range using the merchant facade.
-		/// </summary>
-		/// <param name="dateStart">The start date for the query.</param>
-		/// <param name="dateEnd">The end date for the query.</param>
-		/// <returns>A list of invoice objects retrieved from the server.</returns>
-		public async Task<Invoice[]> GetInvoicesAsync(DateTime? dateStart = null, DateTime? dateEnd = null)
+        /// <summary>
+        /// Retrieve a list of invoices by date range using the merchant facade.
+        /// </summary>
+        /// <param name="dateStart">The start date for the query.</param>
+        /// <param name="dateEnd">The end date for the query.</param>
+        /// <returns>A list of invoice objects retrieved from the server.</returns>
+        public virtual async Task<Invoice[]> GetInvoicesAsync(DateTime? dateStart = null, DateTime? dateEnd = null)
 		{
 			var token = await this.GetAccessTokenAsync(Facade.Merchant).ConfigureAwait(false);
 
@@ -458,7 +458,7 @@ namespace NBitpayClient
         /// </summary>
         /// <param name="baseCurrencyCode">What currency to base the result rates on</param>
         /// <returns>The rate table as an object retrieved from the server.</returns>
-        public Rates GetRates(string baseCurrencyCode = null)
+        public virtual Rates GetRates(string baseCurrencyCode = null)
 		{
 			return GetRatesAsync(baseCurrencyCode).GetAwaiter().GetResult();
 		}
@@ -468,7 +468,7 @@ namespace NBitpayClient
         /// </summary>
         /// <param name="baseCurrencyCode">What currency to base the result rates on</param>
         /// <returns>The rate table as an object retrieved from the server.</returns>
-        public async Task<Rates> GetRatesAsync(string baseCurrencyCode = null)
+        public virtual async Task<Rates> GetRatesAsync(string baseCurrencyCode = null)
 		{
             var url = $"rates{(string.IsNullOrEmpty(baseCurrencyCode) ? $"/{baseCurrencyCode}" : String.Empty)}";
 
@@ -488,13 +488,13 @@ namespace NBitpayClient
 	        return GetRateAsync(baseCurrencyCode, currencyCode).GetAwaiter().GetResult();
         }
 
-	    /// <summary>
+        /// <summary>
         /// Retrieves the exchange rate for the given currency using the public facade.
         /// </summary>
         /// <param name="baseCurrencyCode">The currency to base the result rate on</param>
         /// <param name="currencyCode">The target currency to get the rate for</param>
         /// <returns>The rate as an object retrieved from the server.</returns>
-        public async Task<Rate> GetRateAsync(string baseCurrencyCode, string currencyCode)
+        public virtual async Task<Rate> GetRateAsync(string baseCurrencyCode, string currencyCode)
         {
 	        var url = $"rates/{baseCurrencyCode}/{currencyCode}";
 	        HttpResponseMessage response = await this.GetAsync(url, true).ConfigureAwait(false);
@@ -502,20 +502,20 @@ namespace NBitpayClient
 	        return rate;
 	    }
 
-	    /// <summary>
+        /// <summary>
         /// Retrieves the caller's ledgers for each currency with summary.
         /// </summary>
         /// <returns>A list of ledger objects retrieved from the server.</returns>
-        public List<Ledger> GetLedgers()
+        public virtual List<Ledger> GetLedgers()
 		{
 			return GetLedgersAsync().GetAwaiter().GetResult();
 		}
 
-		/// <summary>
-		/// Retrieves the caller's ledgers for each currency with summary.
-		/// </summary>
-		/// <returns>A list of ledger objects retrieved from the server.</returns>
-		public async Task<List<Ledger>> GetLedgersAsync()
+        /// <summary>
+        /// Retrieves the caller's ledgers for each currency with summary.
+        /// </summary>
+        /// <returns>A list of ledger objects retrieved from the server.</returns>
+        public virtual async Task<List<Ledger>> GetLedgersAsync()
 		{
 			var token = await this.GetAccessTokenAsync(Facade.Merchant).ConfigureAwait(false);
 
@@ -527,26 +527,26 @@ namespace NBitpayClient
 			return ledgers;
 		}
 
-		/// <summary>
-		/// Retrieve a list of ledger entries by date range using the merchant facade.
-		/// </summary>
-		/// <param name="currency">The three digit currency string for the ledger to retrieve.</param>
-		/// <param name="dateStart">The start date for the query.</param>
-		/// <param name="dateEnd">The end date for the query.</param>
-		/// <returns>A list of invoice objects retrieved from the server.</returns>
-		public Ledger GetLedger(String currency, DateTime? dateStart = null, DateTime? dateEnd = null)
+        /// <summary>
+        /// Retrieve a list of ledger entries by date range using the merchant facade.
+        /// </summary>
+        /// <param name="currency">The three digit currency string for the ledger to retrieve.</param>
+        /// <param name="dateStart">The start date for the query.</param>
+        /// <param name="dateEnd">The end date for the query.</param>
+        /// <returns>A list of invoice objects retrieved from the server.</returns>
+        public virtual Ledger GetLedger(String currency, DateTime? dateStart = null, DateTime? dateEnd = null)
 		{
 			return GetLedgerAsync(currency, dateStart, dateEnd).GetAwaiter().GetResult();
 		}
 
-		/// <summary>
-		/// Retrieve a list of ledger entries by date range using the merchant facade.
-		/// </summary>
-		/// <param name="currency">The three digit currency string for the ledger to retrieve.</param>
-		/// <param name="dateStart">The start date for the query.</param>
-		/// <param name="dateEnd">The end date for the query.</param>
-		/// <returns>A list of invoice objects retrieved from the server.</returns>
-		public async Task<Ledger> GetLedgerAsync(String currency, DateTime? dateStart = null, DateTime? dateEnd = null)
+        /// <summary>
+        /// Retrieve a list of ledger entries by date range using the merchant facade.
+        /// </summary>
+        /// <param name="currency">The three digit currency string for the ledger to retrieve.</param>
+        /// <param name="dateStart">The start date for the query.</param>
+        /// <param name="dateEnd">The end date for the query.</param>
+        /// <returns>A list of invoice objects retrieved from the server.</returns>
+        public virtual async Task<Ledger> GetLedgerAsync(String currency, DateTime? dateStart = null, DateTime? dateEnd = null)
 		{
 			var token = await this.GetAccessTokenAsync(Facade.Merchant).ConfigureAwait(false);
 
@@ -583,7 +583,7 @@ namespace NBitpayClient
 			}
 		}
 
-		public async Task<AccessToken[]> GetAccessTokensAsync()
+        public virtual async Task<AccessToken[]> GetAccessTokensAsync()
 		{
 			HttpResponseMessage response = await this.GetAsync("tokens", true).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
@@ -593,22 +593,22 @@ namespace NBitpayClient
 			return ParseTokens(result);
 		}
 
-		/// <summary>
-		/// Test access to a facade
-		/// </summary>
-		/// <param name="facade">The facade</param>
-		/// <returns>True authorized, else false</returns>
-		public bool TestAccess(Facade facade)
+        /// <summary>
+        /// Test access to a facade
+        /// </summary>
+        /// <param name="facade">The facade</param>
+        /// <returns>True authorized, else false</returns>
+        public virtual bool TestAccess(Facade facade)
 		{
 			return TestAccessAsync(facade).GetAwaiter().GetResult();
 		}
 
-		/// <summary>
-		/// Test access to a facade
-		/// </summary>
-		/// <param name="facade">The facade</param>
-		/// <returns>True if authorized, else false</returns>
-		public async Task<bool> TestAccessAsync(Facade facade)
+        /// <summary>
+        /// Test access to a facade
+        /// </summary>
+        /// <param name="facade">The facade</param>
+        /// <returns>True if authorized, else false</returns>
+        public virtual async Task<bool> TestAccessAsync(Facade facade)
 		{
 			if(facade == null)
 				throw new ArgumentNullException(nameof(facade));
@@ -623,7 +623,7 @@ namespace NBitpayClient
 			return token != null;
 		}
 
-		public async Task<AccessToken> GetAccessTokenAsync(Facade facade)
+        public virtual async Task<AccessToken> GetAccessTokenAsync(Facade facade)
 		{
 			var auth = _Auth;
 			var token = auth.GetAccessToken(facade);
