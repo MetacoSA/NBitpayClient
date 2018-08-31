@@ -85,7 +85,7 @@ namespace NBitpayClient
 		}
 	}
 
-	public class Bitpay
+	public class Bitpay : IBitpay
 	{
 		public class AccessToken
 		{
