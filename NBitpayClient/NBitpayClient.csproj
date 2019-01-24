@@ -8,7 +8,7 @@
 		<Description>Non official .NET Bitpay API compatible client</Description>
 		<PackageTags>bitcoin</PackageTags>
 		<PackageProjectUrl>https://github.com/MetacoSA/NBitpayClient</PackageProjectUrl>
-		<PackageLicenseUrl>https://github.com/MetacoSA/NBitpayClient/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/MetacoSA/NBitpayClient</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
