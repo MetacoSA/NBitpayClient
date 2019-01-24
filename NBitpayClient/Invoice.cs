@@ -172,7 +172,13 @@ namespace NBitpayClient
 		[JsonProperty(PropertyName = "price")]
 		public decimal Price { get; set; }
 
-		String _currency = "";
+        /// <summary>
+        /// How much tax are included in the price. Only supported by BTCPay Server.
+        /// </summary>
+        [JsonProperty(PropertyName = "taxIncluded", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public decimal TaxIncluded { get; set; }
+
+        String _currency = "";
 		[JsonProperty(PropertyName = "currency")]
 		public string Currency
 		{
