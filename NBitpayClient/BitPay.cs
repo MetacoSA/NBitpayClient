@@ -303,23 +303,35 @@ namespace NBitpayClient
         /// <param name="facade">The facade used (default POS).</param>
         /// <returns>The invoice object retrieved from the server.</returns>
         public virtual async Task<Invoice> GetInvoiceAsync(String invoiceId, Facade facade = null)
-		{
-			facade = facade ?? Facade.Merchant;
-			// Provide the merchant token whenthe merchant facade is being used.
-			// GET/invoices expects the merchant token and not the merchant/invoice token.
+        {
+            return await GetInvoiceAsync(invoiceId, facade);
+        }
 
-			HttpResponseMessage response = null;
-			if(facade == Facade.Merchant)
-			{
-				var token = (await GetAccessTokenAsync(facade).ConfigureAwait(false)).Value;
-				response = await this.GetAsync($"invoices/{invoiceId}?token={token}", true).ConfigureAwait(false);
-			}
-			else
-			{
-				response = await GetAsync($"invoices/" + invoiceId, true).ConfigureAwait(false);
-			}
-			return await ParseResponse<Invoice>(response).ConfigureAwait(false);
-		}
+        /// <summary>
+        /// Retrieve an invoice by id and token.
+        /// </summary>
+        /// <param name="invoiceId">The id of the requested invoice.</param>
+        /// <param name="facade">The facade used (default POS).</param>
+        /// <returns>The invoice object retrieved from the server.</returns>
+        public virtual async Task<Invoice> GetInvoiceAsync<T>(String invoiceId, Facade facade = null) where T : Invoice
+        {
+            facade = facade ?? Facade.Merchant;
+            // Provide the merchant token whenthe merchant facade is being used.
+            // GET/invoices expects the merchant token and not the merchant/invoice token.
+
+            HttpResponseMessage response = null;
+            if (facade == Facade.Merchant)
+            {
+                var token = (await GetAccessTokenAsync(facade).ConfigureAwait(false)).Value;
+                response = await this.GetAsync($"invoices/{invoiceId}?token={token}", true).ConfigureAwait(false);
+            }
+            else
+            {
+                response = await GetAsync($"invoices/" + invoiceId, true).ConfigureAwait(false);
+            }
+
+            return await ParseResponse<T>(response).ConfigureAwait(false);
+        }
 
         /// <summary>
         /// Retrieves settlement reports for the calling merchant filtered by query. The `limit` and `offset` parameters specify pages for large query sets.
