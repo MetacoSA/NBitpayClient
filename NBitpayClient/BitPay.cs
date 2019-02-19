@@ -304,7 +304,7 @@ namespace NBitpayClient
         /// <returns>The invoice object retrieved from the server.</returns>
         public virtual async Task<Invoice> GetInvoiceAsync(String invoiceId, Facade facade = null)
         {
-            return await GetInvoiceAsync(invoiceId, facade);
+            return await GetInvoiceAsync<Invoice>(invoiceId, facade);
         }
 
         /// <summary>
@@ -442,18 +442,29 @@ namespace NBitpayClient
         /// <param name="dateEnd">The end date for the query.</param>
         /// <returns>A list of invoice objects retrieved from the server.</returns>
         public virtual async Task<Invoice[]> GetInvoicesAsync(DateTime? dateStart = null, DateTime? dateEnd = null)
-		{
-			var token = await this.GetAccessTokenAsync(Facade.Merchant).ConfigureAwait(false);
+        {
+            return await GetInvoicesAsync<Invoice>(dateStart, dateEnd);
+        }
+        
+        /// <summary>
+        /// Retrieve a list of invoices by date range using the merchant facade.
+        /// </summary>
+        /// <param name="dateStart">The start date for the query.</param>
+        /// <param name="dateEnd">The end date for the query.</param>
+        /// <returns>A list of invoice objects retrieved from the server.</returns>
+        public virtual async Task<Invoice[]> GetInvoicesAsync<T>(DateTime? dateStart = null, DateTime? dateEnd = null) where T:Invoice
+        {
+            var token = await this.GetAccessTokenAsync(Facade.Merchant).ConfigureAwait(false);
 
-		    var parameters = new Dictionary<string, string>();
-			parameters.Add("token", token.Value);
-			if(dateStart != null)
-				parameters.Add("dateStart", dateStart.Value.ToString("d", CultureInfo.InvariantCulture));
-			if(dateEnd != null)
-				parameters.Add("dateEnd", dateEnd.Value.ToString("d", CultureInfo.InvariantCulture));
-			var response = await GetAsync($"invoices" + BuildQuery(parameters), true).ConfigureAwait(false);
-			return await ParseResponse<Invoice[]>(response).ConfigureAwait(false);
-		}
+            var parameters = new Dictionary<string, string>();
+            parameters.Add("token", token.Value);
+            if(dateStart != null)
+                parameters.Add("dateStart", dateStart.Value.ToString("d", CultureInfo.InvariantCulture));
+            if(dateEnd != null)
+                parameters.Add("dateEnd", dateEnd.Value.ToString("d", CultureInfo.InvariantCulture));
+            var response = await GetAsync($"invoices" + BuildQuery(parameters), true).ConfigureAwait(false);
+            return await ParseResponse<Invoice[]>(response).ConfigureAwait(false);
+        }
 
 		private string BuildQuery(Dictionary<string, string> parameters)
 		{
