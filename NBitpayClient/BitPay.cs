@@ -313,7 +313,7 @@ namespace NBitpayClient
         /// <param name="invoiceId">The id of the requested invoice.</param>
         /// <param name="facade">The facade used (default POS).</param>
         /// <returns>The invoice object retrieved from the server.</returns>
-        public virtual async Task<Invoice> GetInvoiceAsync<T>(String invoiceId, Facade facade = null) where T : Invoice
+        public virtual async Task<T> GetInvoiceAsync<T>(String invoiceId, Facade facade = null) where T : Invoice
         {
             facade = facade ?? Facade.Merchant;
             // Provide the merchant token whenthe merchant facade is being used.
@@ -452,7 +452,7 @@ namespace NBitpayClient
         /// <param name="dateStart">The start date for the query.</param>
         /// <param name="dateEnd">The end date for the query.</param>
         /// <returns>A list of invoice objects retrieved from the server.</returns>
-        public virtual async Task<Invoice[]> GetInvoicesAsync<T>(DateTime? dateStart = null, DateTime? dateEnd = null) where T:Invoice
+        public virtual async Task<T[]> GetInvoicesAsync<T>(DateTime? dateStart = null, DateTime? dateEnd = null) where T:Invoice
         {
             var token = await this.GetAccessTokenAsync(Facade.Merchant).ConfigureAwait(false);
 
@@ -463,7 +463,7 @@ namespace NBitpayClient
             if(dateEnd != null)
                 parameters.Add("dateEnd", dateEnd.Value.ToString("d", CultureInfo.InvariantCulture));
             var response = await GetAsync($"invoices" + BuildQuery(parameters), true).ConfigureAwait(false);
-            return await ParseResponse<Invoice[]>(response).ConfigureAwait(false);
+            return await ParseResponse<T[]>(response).ConfigureAwait(false);
         }
 
 		private string BuildQuery(Dictionary<string, string> parameters)
