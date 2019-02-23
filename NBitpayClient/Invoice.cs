@@ -161,7 +161,7 @@ namespace NBitpayClient
 
 		[JsonProperty(PropertyName = "nonce")]
 		public long Nonce { get; set; }
-		public bool ShouldSerializeNonce() { return Nonce != 0; }
+		public virtual bool ShouldSerializeNonce() { return Nonce != 0; }
 
 		[JsonProperty(PropertyName = "token")]
 		public string Token { get; set; }
@@ -194,98 +194,98 @@ namespace NBitpayClient
 
 		[JsonProperty(PropertyName = "orderId")]
 		public string OrderId { get; set; }
-		public bool ShouldSerializeOrderId() { return !String.IsNullOrEmpty(OrderId); }
+		public virtual bool ShouldSerializeOrderId() { return !String.IsNullOrEmpty(OrderId); }
 
 		[JsonProperty(PropertyName = "itemDesc")]
 		public string ItemDesc { get; set; }
-		public bool ShouldSerializeItemDesc() { return !String.IsNullOrEmpty(ItemDesc); }
+		public virtual bool ShouldSerializeItemDesc() { return !String.IsNullOrEmpty(ItemDesc); }
 
 		[JsonProperty(PropertyName = "itemCode")]
 		public string ItemCode { get; set; }
-		public bool ShouldSerializeItemCode() { return !String.IsNullOrEmpty(ItemCode); }
+		public virtual bool ShouldSerializeItemCode() { return !String.IsNullOrEmpty(ItemCode); }
 
 		[JsonProperty(PropertyName = "posData")]
 		public string PosData { get; set; }
-		public bool ShouldSerializePosData() { return !String.IsNullOrEmpty(PosData); }
+		public virtual bool ShouldSerializePosData() { return !String.IsNullOrEmpty(PosData); }
 
 		[JsonProperty(PropertyName = "notificationURL")]
 		public string NotificationURL { get; set; }
-		public bool ShouldSerializeNotificationURL() { return !String.IsNullOrEmpty(NotificationURL); }
+		public virtual bool ShouldSerializeNotificationURL() { return !String.IsNullOrEmpty(NotificationURL); }
 
 		[JsonProperty(PropertyName = "transactionSpeed")]
 		public string TransactionSpeed { get; set; }
-		public bool ShouldSerializeTransactionSpeed() { return !String.IsNullOrEmpty(TransactionSpeed); }
+		public virtual bool ShouldSerializeTransactionSpeed() { return !String.IsNullOrEmpty(TransactionSpeed); }
 
 		[JsonProperty(PropertyName = "fullNotifications")]
 		public bool FullNotifications { get; set; }
-		public bool ShouldSerializeFullNotifications() { return FullNotifications; }
+		public virtual bool ShouldSerializeFullNotifications() { return FullNotifications; }
 
 		[JsonProperty(PropertyName = "extendedNotifications")]
 		public bool ExtendedNotifications
 		{
 			get; set;
 		}
-		public bool ShouldSerializextendedNotifications()
+		public virtual bool ShouldSerializextendedNotifications()
 		{
 			return ExtendedNotifications;
 		}
 
 		[JsonProperty(PropertyName = "notificationEmail")]
 		public string NotificationEmail { get; set; }
-		public bool ShouldSerializeNotificationEmail() { return !String.IsNullOrEmpty(NotificationEmail); }
+		public virtual bool ShouldSerializeNotificationEmail() { return !String.IsNullOrEmpty(NotificationEmail); }
 
 		[JsonProperty(PropertyName = "redirectURL")]
 		public string RedirectURL { get; set; }
-		public bool ShouldSerializeRedirectURL() { return !String.IsNullOrEmpty(RedirectURL); }
+		public virtual bool ShouldSerializeRedirectURL() { return !String.IsNullOrEmpty(RedirectURL); }
 
 		[JsonProperty(PropertyName = "physical")]
 		public bool Physical { get; set; }
-		public bool ShouldSerializePhysical() { return Physical; }
+		public virtual bool ShouldSerializePhysical() { return Physical; }
 
 		[JsonProperty(PropertyName = "buyerName")]
 		public string BuyerName { get; set; }
-		public bool ShouldSerializeBuyerName() { return !String.IsNullOrEmpty(BuyerName); }
+		public virtual bool ShouldSerializeBuyerName() { return !String.IsNullOrEmpty(BuyerName); }
 
 		[JsonProperty(PropertyName = "buyerAddress1")]
 		public string BuyerAddress1 { get; set; }
-		public bool ShouldSerializeBuyerAddress1() { return !String.IsNullOrEmpty(BuyerAddress1); }
+		public virtual bool ShouldSerializeBuyerAddress1() { return !String.IsNullOrEmpty(BuyerAddress1); }
 
 		[JsonProperty(PropertyName = "buyerAddress2")]
 		public string BuyerAddress2 { get; set; }
-		public bool ShouldSerializeBuyerAddress2() { return !String.IsNullOrEmpty(BuyerAddress2); }
+		public virtual bool ShouldSerializeBuyerAddress2() { return !String.IsNullOrEmpty(BuyerAddress2); }
 
 		[JsonProperty(PropertyName = "buyerCity")]
 		public string BuyerCity { get; set; }
-		public bool ShouldSerializeBuyerCity() { return !String.IsNullOrEmpty(BuyerCity); }
+		public virtual bool ShouldSerializeBuyerCity() { return !String.IsNullOrEmpty(BuyerCity); }
 
 		[JsonProperty(PropertyName = "buyerState")]
 		public string BuyerState { get; set; }
-		public bool ShouldSerializeBuyerState() { return !String.IsNullOrEmpty(BuyerState); }
+		public virtual bool ShouldSerializeBuyerState() { return !String.IsNullOrEmpty(BuyerState); }
 
 		[JsonProperty(PropertyName = "buyerZip")]
 		public string BuyerZip { get; set; }
-		public bool ShouldSerializeBuyerZip() { return !String.IsNullOrEmpty(BuyerZip); }
+		public virtual bool ShouldSerializeBuyerZip() { return !String.IsNullOrEmpty(BuyerZip); }
 
 		[JsonProperty(PropertyName = "buyerCountry")]
 		public string BuyerCountry { get; set; }
-		public bool ShouldSerializeBuyerCountry() { return !String.IsNullOrEmpty(BuyerCountry); }
+		public virtual bool ShouldSerializeBuyerCountry() { return !String.IsNullOrEmpty(BuyerCountry); }
 
 		[JsonProperty(PropertyName = "buyerEmail")]
 		public string BuyerEmail { get; set; }
-		public bool ShouldSerializeBuyerEmail() { return !String.IsNullOrEmpty(BuyerEmail); }
+		public virtual bool ShouldSerializeBuyerEmail() { return !String.IsNullOrEmpty(BuyerEmail); }
 
 		[JsonProperty(PropertyName = "buyerPhone")]
 		public string BuyerPhone { get; set; }
-		public bool ShouldSerializeBuyerPhone() { return !String.IsNullOrEmpty(BuyerPhone); }
+		public virtual bool ShouldSerializeBuyerPhone() { return !String.IsNullOrEmpty(BuyerPhone); }
 
 		// Response fields
 		//
 
 		public string Id { get; set; }
-		public bool ShouldSerializeId() { return false; }
+		public virtual bool ShouldSerializeId() { return false; }
 
 		public string Url { get; set; }
-		public bool ShouldSerializeUrl() { return false; }
+		public virtual bool ShouldSerializeUrl() { return false; }
 
 		public string Status { get; set; }
 		public bool IsPaid()
@@ -293,56 +293,56 @@ namespace NBitpayClient
 			var paid = new[] { "paid", "confirmed", "complete" };
 			return Status != null && paid.Contains(Status);
 		}
-		public bool ShouldSerializeStatus() { return false; }
+		public virtual bool ShouldSerializeStatus() { return false; }
 
 		[JsonConverter(typeof(MoneyJsonConverter))]
 		public Money BtcPrice { get; set; }
-		public bool ShouldSerializeBtcPrice() { return false; }
+		public virtual bool ShouldSerializeBtcPrice() { return false; }
 
 		[JsonConverter(typeof(DateTimeJsonConverter))]
 		public DateTimeOffset InvoiceTime { get; set; }
-		public bool ShouldSerializeInvoiceTime() { return false; }
+		public virtual bool ShouldSerializeInvoiceTime() { return false; }
 
 		[JsonConverter(typeof(DateTimeJsonConverter))]
 		public DateTimeOffset ExpirationTime { get; set; }
-		public bool ShouldSerializeExpirationTime() { return false; }
+		public virtual bool ShouldSerializeExpirationTime() { return false; }
 
 		[JsonConverter(typeof(DateTimeJsonConverter))]
 		public DateTimeOffset CurrentTime { get; set; }
-		public bool ShouldSerializeCurrentTime() { return false; }
+		public virtual bool ShouldSerializeCurrentTime() { return false; }
 
 		[JsonConverter(typeof(MoneyJsonConverter))]
 		public Money BtcPaid { get; set; }
-		public bool ShouldSerializeBtcPaid() { return false; }
+		public virtual bool ShouldSerializeBtcPaid() { return false; }
 
 		[JsonConverter(typeof(MoneyJsonConverter))]
 		public Money BtcDue { get; set; }
-		public bool ShouldSerializeBtcDue() { return false; }
+		public virtual bool ShouldSerializeBtcDue() { return false; }
 
 		[JsonProperty("cryptoInfo")]
 		public InvoiceCryptoInfo[] CryptoInfo
 		{
 			get; set;
 		}
-		public bool ShouldSerializeCryptoInfo()
+		public virtual bool ShouldSerializeCryptoInfo()
 		{
 			return CryptoInfo != null;
 		}
 
 		public List<InvoiceTransaction> Transactions { get; set; }
-		public bool ShouldSerializeTransactions() { return false; }
+		public virtual bool ShouldSerializeTransactions() { return false; }
 
 		public decimal Rate { get; set; }
-		public bool ShouldSerializeRate() { return false; }
+		public virtual bool ShouldSerializeRate() { return false; }
 
 		public Dictionary<string, string> ExRates { get; set; }
-		public bool ShouldSerializeExRates() { return false; }
+		public virtual bool ShouldSerializeExRates() { return false; }
 
 		public JToken ExceptionStatus { get; set; }
-		public bool ShouldSerializeExceptionStatus() { return false; }
+		public virtual bool ShouldSerializeExceptionStatus() { return false; }
 
 		public InvoicePaymentUrls PaymentUrls { get; set; }
-		public bool ShouldSerializePaymentUrls() { return false; }
+		public virtual bool ShouldSerializePaymentUrls() { return false; }
 
 		public string BitcoinAddress
 		{
@@ -357,11 +357,11 @@ namespace NBitpayClient
 		{
 			get { return this.Flags != null && this.Flags.Refundable; }
 		}
-		public bool ShouldSerializeRefundable() { return false; }
+		public virtual bool ShouldSerializeRefundable() { return false; }
 
 		[Newtonsoft.Json.JsonProperty]
 		private Flags Flags { get; set; }
-		public bool ShouldSerializeFlags() { return false; }
+		public virtual bool ShouldSerializeFlags() { return false; }
 
 		public Dictionary<string, long> PaymentSubtotals { get; set; }
 
@@ -375,13 +375,13 @@ namespace NBitpayClient
 		public Dictionary<string, MinerFeeInfo> MinerFees { get; set; }
 
 		public Dictionary<string, string> Addresses { get; set; }
-		public bool ShouldSerializeAddresses() { return false; }
+		public virtual bool ShouldSerializeAddresses() { return false; }
 
 		public Dictionary<string, InvoicePaymentUrls> PaymentCodes
 		{
 			get; set;
 		}
-		public bool ShouldSerializePaymentCodes() { return false; }
+		public virtual bool ShouldSerializePaymentCodes() { return false; }
 
         public string TransactionCurrency { get; set; }
         public bool ShouldSerializeTransactionCurrency() { return false; }
