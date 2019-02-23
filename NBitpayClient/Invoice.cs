@@ -383,9 +383,21 @@ namespace NBitpayClient
 		}
 		public bool ShouldSerializePaymentCodes() { return false; }
 
-	}
+        public string TransactionCurrency { get; set; }
+        public bool ShouldSerializeTransactionCurrency() { return false; }
 
-	class Flags
+        public List<RefundInfo> RefundInfo { get; set; }
+        public bool ShouldSerializeRefundInfo() { return false; }
+
+        public bool RefundAddressRequestPending { get; set; }
+        public bool ShouldSerializeRefundAddressRequestPending() { return false; }
+
+        public List<Dictionary<string, RefundAddress>> RefundAddresses { get; set; }
+        public bool ShouldSerializeRefundAddresses() { return false; }
+
+    }
+
+    class Flags
 	{
 		public bool Refundable { get; set; }
 	}
