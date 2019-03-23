@@ -160,7 +160,7 @@ namespace NBitpayClient
 
 		private Uri _baseUrl = null;
 		AuthInformation _Auth;
-        public static HttpClient _httpClient = new HttpClient();
+        private static HttpClient _httpClient = new HttpClient();
 
         public HttpClient HttpClient
         {
@@ -170,7 +170,7 @@ namespace NBitpayClient
             }
             set
             {
-                _httpClient = HttpClient;
+                _httpClient = value;
             }
         }
 
