@@ -13,7 +13,6 @@ using NBitpayClient.Extensions;
 
 namespace NBitpayClient
 {
-
 	public class Facade
 	{
 		public static Facade Merchant = new Facade("merchant");
@@ -157,16 +156,25 @@ namespace NBitpayClient
 			}
 		}
 
-
-
-
 		private const String BITPAY_API_VERSION = "2.0.0";
 
 		private Uri _baseUrl = null;
 		AuthInformation _Auth;
-		static HttpClient _Client = new HttpClient();
+        public static HttpClient _httpClient = new HttpClient();
 
-		public string SIN
+        public HttpClient HttpClient
+        {
+            get
+            {
+                return _httpClient;
+            }
+            set
+            {
+                _httpClient = HttpClient;
+            }
+        }
+
+        public string SIN
 		{
 			get
 			{
@@ -671,7 +679,7 @@ namespace NBitpayClient
 				{
 					_Auth.Sign(message);
 				}
-				var result = await _Client.SendAsync(message).ConfigureAwait(false);
+				var result = await _httpClient.SendAsync(message).ConfigureAwait(false);
 				return result;
 			}
 			catch(Exception ex)
@@ -691,7 +699,7 @@ namespace NBitpayClient
 				{
 					_Auth.Sign(message);
 				}
-				var result = await _Client.SendAsync(message).ConfigureAwait(false);
+				var result = await _httpClient.SendAsync(message).ConfigureAwait(false);
 				return result;
 			}
 			catch(Exception ex)
