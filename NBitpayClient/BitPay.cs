@@ -157,22 +157,9 @@ namespace NBitpayClient
 		}
 
 		private const String BITPAY_API_VERSION = "2.0.0";
+        AuthInformation _Auth;
 
-		private Uri _baseUrl = null;
-		AuthInformation _Auth;
-        private static HttpClient _httpClient = new HttpClient();
-
-        public static HttpClient HttpClient
-        {
-            get
-            {
-                return _httpClient;
-            }
-            set
-            {
-                _httpClient = value;
-            }
-        }
+        public static HttpClient HttpClient { get; set; } = new HttpClient();
 
         public string SIN
 		{
@@ -182,28 +169,22 @@ namespace NBitpayClient
 			}
 		}
 
-		public Uri BaseUrl
-		{
-			get
-			{
-				return _baseUrl;
-			}
-		}
+        public Uri BaseUrl { get; } = null;
 
-		/// <summary>
-		/// Constructor for use if the keys and SIN were derived external to this library.
-		/// </summary>
-		/// <param name="ecKey">An elliptical curve key.</param>
-		/// <param name="clientName">The label for this client.</param>
-		/// <param name="envUrl">The target server URL.</param>
-		public Bitpay(Key ecKey, Uri envUrl)
+        /// <summary>
+        /// Constructor for use if the keys and SIN were derived external to this library.
+        /// </summary>
+        /// <param name="ecKey">An elliptical curve key.</param>
+        /// <param name="clientName">The label for this client.</param>
+        /// <param name="envUrl">The target server URL.</param>
+        public Bitpay(Key ecKey, Uri envUrl)
 		{
 			if(ecKey == null)
 				throw new ArgumentNullException(nameof(ecKey));
 			if(envUrl == null)
 				throw new ArgumentNullException(nameof(envUrl));
 			_Auth = new AuthInformation(ecKey);
-			_baseUrl = envUrl;
+			BaseUrl = envUrl;
 		}
 
 		/// <summary>
@@ -679,7 +660,7 @@ namespace NBitpayClient
 				{
 					_Auth.Sign(message);
 				}
-				var result = await _httpClient.SendAsync(message).ConfigureAwait(false);
+				var result = await HttpClient.SendAsync(message).ConfigureAwait(false);
 				return result;
 			}
 			catch(Exception ex)
@@ -699,7 +680,7 @@ namespace NBitpayClient
 				{
 					_Auth.Sign(message);
 				}
-				var result = await _httpClient.SendAsync(message).ConfigureAwait(false);
+				var result = await HttpClient.SendAsync(message).ConfigureAwait(false);
 				return result;
 			}
 			catch(Exception ex)
@@ -710,7 +691,7 @@ namespace NBitpayClient
 
 		private string GetFullUri(string relativePath)
 		{
-			var uri = _baseUrl.AbsoluteUri;
+			var uri = BaseUrl.AbsoluteUri;
 			if(!uri.EndsWith("/", StringComparison.Ordinal))
 				uri += "/";
 			uri += relativePath;
