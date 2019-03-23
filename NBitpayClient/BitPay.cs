@@ -162,7 +162,7 @@ namespace NBitpayClient
 		AuthInformation _Auth;
         private static HttpClient _httpClient = new HttpClient();
 
-        public HttpClient HttpClient
+        public static HttpClient HttpClient
         {
             get
             {
