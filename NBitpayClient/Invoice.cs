@@ -125,8 +125,26 @@ namespace NBitpayClient
 		{
 			get; set;
 		}
-	}
+        /// <summary>
+        /// Payments made to the invoice in this crypto
+        /// Only available with BTCPay (Bitpay does not support this)
+        /// </summary>
+        [JsonProperty("payments")]
+        public List<InvoicePaymentInfo> Payments { get; set; }
+    }
 
+    public class InvoicePaymentInfo
+    {
+        public string Id { get; set; }
+        public DateTime ReceivedDate { get; set; }
+        public decimal Value { get; set; }
+        public decimal Fee { get; set; }
+        public string PaymentType { get; set; }
+        public bool Confirmed { get; set; }
+        public bool Completed { get; set; }
+        public string Destination { get; set; }
+    }
+	
 	public class Invoice
 	{
 		public const String STATUS_NEW = "new";
