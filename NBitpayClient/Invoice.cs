@@ -127,7 +127,6 @@ namespace NBitpayClient
 		}
         /// <summary>
         /// Payments made to the invoice in this crypto
-        /// Only available with BTCPay (Bitpay does not support this)
         /// </summary>
         [JsonProperty("payments")]
         public List<InvoicePaymentInfo> Payments { get; set; }
@@ -412,6 +411,10 @@ namespace NBitpayClient
 
         public List<Dictionary<string, RefundAddress>> RefundAddresses { get; set; }
         public bool ShouldSerializeRefundAddresses() { return false; }
+
+        [JsonProperty("redirectAutomatically")]
+        public bool? RedirectAutomatically { get; set; }
+        public bool ShouldSerializeRedirectAutomatically() { return RedirectAutomatically is bool; }
 
     }
 
