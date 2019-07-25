@@ -2,7 +2,7 @@
 
 # NBitpayClient
 
-A non-offical and sane Bitpay API compatible client library created because the [official](https://github.com/bitpay/csharp-bitpay-client) project is barely usable.
+A non-offical and Bitpay API compatible client library.
 
 ## How to use
 
