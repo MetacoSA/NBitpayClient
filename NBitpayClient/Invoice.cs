@@ -16,7 +16,7 @@ namespace NBitpayClient
 			get; set;
 		}
 		[JsonProperty("totalFee")]
-		public long TotalFee
+		public decimal TotalFee
 		{
 			get; set;
 		}
@@ -380,10 +380,10 @@ namespace NBitpayClient
 		private Flags Flags { get; set; }
 		public virtual bool ShouldSerializeFlags() { return false; }
 
-		public Dictionary<string, long> PaymentSubtotals { get; set; }
+		public Dictionary<string, decimal> PaymentSubtotals { get; set; }
 
-		public Dictionary<string, long> PaymentTotals { get; set; }
-		public long AmountPaid { get; set; }
+		public Dictionary<string, decimal> PaymentTotals { get; set; }
+		public decimal AmountPaid { get; set; }
 
 		public Dictionary<string, Dictionary<string, decimal>> ExchangeRates { get; set; }
 

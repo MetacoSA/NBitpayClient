@@ -119,12 +119,12 @@ namespace NBitpayClient
 	        get; set;
 	    }
 	    [JsonProperty(PropertyName = "paymentSubtotals")]
-	    public Dictionary<string, long> PaymentSubtotals
+	    public Dictionary<string, decimal> PaymentSubtotals
         {
 	        get; set;
 	    }
 	    [JsonProperty(PropertyName = "paymentTotals")]
-	    public Dictionary<string,long> PaymentTotals
+	    public Dictionary<string, decimal> PaymentTotals
         {
 	        get; set;
 	    }
