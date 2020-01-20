@@ -134,13 +134,9 @@ namespace NBitpayClient
 			public AccessToken GetAccessToken(Facade requirement)
 			{
 				var token = _Tokens.TryGet(requirement.ToString());
-				if(requirement == Facade.User)
+				if(token == null && (requirement == Facade.User || requirement == Facade.PointOfSale))
 				{
 					token = _Tokens.TryGet(Facade.PointOfSale.ToString()) ?? _Tokens.TryGet(Facade.Merchant.ToString());
-				}
-				if(requirement == Facade.PointOfSale)
-				{
-					token = _Tokens.TryGet(Facade.Merchant.ToString());
 				}
 				return token;
 			}
