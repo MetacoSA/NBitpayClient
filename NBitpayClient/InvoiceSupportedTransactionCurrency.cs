@@ -6,5 +6,8 @@ namespace NBitpayClient
     {
         [JsonProperty(PropertyName = "enabled")]
         public bool Enabled { get; set; }
+
+        [JsonProperty(PropertyName = "reason")]
+        public string Reason { get; set; }
     }
 }

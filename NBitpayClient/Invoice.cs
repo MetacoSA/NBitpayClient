@@ -295,6 +295,10 @@ namespace NBitpayClient
 		public string BuyerPhone { get; set; }
 		public virtual bool ShouldSerializeBuyerPhone() { return !String.IsNullOrEmpty(BuyerPhone); }
 
+		[JsonProperty(PropertyName = "paymentCurrencies")]
+		public string[] PaymentCurrencies { get; set; }
+		public virtual bool ShouldSerializePaymentCurrencies() { return PaymentCurrencies?.Length > 0 == true; }
+
 		// Response fields
 		//
 
