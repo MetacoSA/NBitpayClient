@@ -326,7 +326,7 @@ namespace NBitpayClient
 
 		[JsonConverter(typeof(DateTimeJsonConverter))]
 		public DateTimeOffset ExpirationTime { get; set; }
-		public virtual bool ShouldSerializeExpirationTime() { return false; }
+		public virtual bool ShouldSerializeExpirationTime() { return ExpirationTime != default; }
 
 		[JsonConverter(typeof(DateTimeJsonConverter))]
 		public DateTimeOffset CurrentTime { get; set; }
