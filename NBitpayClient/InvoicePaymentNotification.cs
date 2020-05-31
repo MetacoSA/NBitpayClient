@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace NBitpayClient
 {
@@ -138,6 +137,12 @@ namespace NBitpayClient
 
 	    [JsonProperty(PropertyName = "exchangeRates")]
 	    public Dictionary<string, Dictionary<string, decimal>> ExchangeRates
+        {
+	        get; set;
+	    }
+
+	    [JsonProperty(PropertyName = "orderId")]
+	    public string OrderId
         {
 	        get; set;
 	    }
