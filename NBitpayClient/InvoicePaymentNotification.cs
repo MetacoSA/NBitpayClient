@@ -147,10 +147,10 @@ namespace NBitpayClient
 	        get; set;
 	    }
         
-        [JsonProperty(PropertyName = "_warning")]
-        public string Warning
-        {
-            get { return "This data could have easily been faked and should not be trusted. Please run any invoice checks by first fetching the invoice through the API."; }
-        }
+	    [JsonProperty(PropertyName = "_warning")]
+	    public string Warning
+	    {
+	        get { return "This data could have easily been faked and should not be trusted. Please run any invoice checks by first fetching the invoice through the API."; }
+	    }
     }
 }
